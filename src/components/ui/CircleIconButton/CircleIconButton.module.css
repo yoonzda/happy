@@ -1,9 +1,9 @@
 .button {
-  width: var(--circle-btn-size);
-  height: var(--circle-btn-size);
-  border-radius: 50%;
-  border: 1px solid var(--color-border-strong);
-  background-color: var(--color-bg);
+  width: 56px;
+  height: 56px;
+  border-radius: 0;
+  border: none;
+  background-color: #ededf0;
   color: var(--color-text-primary);
   display: inline-flex;
   align-items: center;
@@ -12,12 +12,11 @@
   flex-shrink: 0;
   transition: background-color var(--duration-fast) var(--ease-smooth),
     color var(--duration-fast) var(--ease-smooth),
-    border-color var(--duration-fast) var(--ease-smooth);
+    opacity var(--duration-fast) var(--ease-smooth);
 }
 
 .button:hover {
-  background-color: var(--color-text-primary);
-  color: var(--color-bg);
+  background-color: #dfdfe4;
 }
 
 .button:focus-visible {
@@ -26,19 +25,50 @@
 }
 
 .icon {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   display: block;
+}
+
+/* Borderless arrow button variant harmonized with FlipCounter */
+.plainLarge {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--color-text-primary);
+}
+
+.plainLarge:hover {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  opacity: 0.55;
+}
+
+.plainLarge .icon {
+  width: 24px;
+  height: 24px;
 }
 
 @media (max-width: 600px) {
   .button {
-    width: var(--circle-btn-size-mobile);
-    height: var(--circle-btn-size-mobile);
+    width: 48px;
+    height: 48px;
   }
 
   .icon {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .plainLarge {
+    width: 34px;
+    height: 34px;
+  }
+
+  .plainLarge .icon {
+    width: 20px;
+    height: 20px;
   }
 }

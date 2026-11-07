@@ -20,7 +20,7 @@
   height: 1px;
   background-color: var(--color-text-primary);
   transform: scaleX(0);
-  transform-origin: left center;
+  transform-origin: center;
   transition: transform var(--duration-fast) var(--ease-smooth);
 }
 
@@ -31,3 +31,4 @@
 .link:hover::after {
   transform: scaleX(1);
 }
+

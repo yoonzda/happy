@@ -1,0 +1,194 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.slash {
+  font-size: 1.15rem;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+/* Balanced light-medium gray with generous inner horizontal breathing room */
+.flipUnit,
+.totalUnit {
+  position: relative;
+  width: 52px;
+  height: 56px;
+  perspective: 360px;
+  background-color: #ededf0;
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.totalUnit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Upper and lower halves */
+.halfTop,
+.halfBottom,
+.flapTopDown,
+.flapBottomDown,
+.flapBottomUp,
+.flapTopUp {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background-color: #ededf0;
+  color: var(--color-text-primary);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.halfTop,
+.flapTopDown,
+.flapTopUp {
+  top: 0;
+  transform-origin: 50% 100%;
+}
+
+.halfBottom,
+.flapBottomDown,
+.flapBottomUp {
+  bottom: 0;
+  transform-origin: 50% 0%;
+}
+
+/* Number text positioned so full height aligns across the 50% clip */
+.digitText {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.halfTop .digitText,
+.flapTopDown .digitText,
+.flapTopUp .digitText {
+  top: 0;
+}
+
+.halfBottom .digitText,
+.flapBottomDown .digitText,
+.flapBottomUp .digitText {
+  bottom: 0;
+}
+
+/* Delicate 1px center split crease line */
+.crease {
+  position: absolute;
+  top: calc(50% - 0.5px);
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ffffff;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Direction 1: Next (Top -> Bottom flip) */
+.flapTopDown {
+  z-index: 3;
+  animation: flipTopDown 0.2s ease-in forwards;
+}
+
+.flapBottomDown {
+  z-index: 4;
+  transform: rotateX(90deg);
+  animation: flipBottomDown 0.2s ease-out 0.19s forwards;
+}
+
+@keyframes flipTopDown {
+  0% {
+    transform: rotateX(0deg);
+    background-color: #ededf0;
+  }
+  100% {
+    transform: rotateX(-90deg);
+    background-color: #dfdfe4;
+  }
+}
+
+@keyframes flipBottomDown {
+  0% {
+    transform: rotateX(90deg);
+    background-color: #dfdfe4;
+  }
+  100% {
+    transform: rotateX(0deg);
+    background-color: #ededf0;
+  }
+}
+
+/* Direction 2: Prev (Bottom -> Top reverse flip) */
+.flapBottomUp {
+  z-index: 3;
+  animation: flipBottomUp 0.2s ease-in forwards;
+}
+
+.flapTopUp {
+  z-index: 4;
+  transform: rotateX(-90deg);
+  animation: flipTopUp 0.2s ease-out 0.19s forwards;
+}
+
+@keyframes flipBottomUp {
+  0% {
+    transform: rotateX(0deg);
+    background-color: #ededf0;
+  }
+  100% {
+    transform: rotateX(90deg);
+    background-color: #dfdfe4;
+  }
+}
+
+@keyframes flipTopUp {
+  0% {
+    transform: rotateX(-90deg);
+    background-color: #dfdfe4;
+  }
+  100% {
+    transform: rotateX(0deg);
+    background-color: #ededf0;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    gap: 6px;
+  }
+
+  .slash {
+    font-size: 0.95rem;
+  }
+
+  .flipUnit,
+  .totalUnit {
+    width: 44px;
+    height: 48px;
+    font-size: 1.05rem;
+  }
+
+  .digitText {
+    height: 48px;
+  }
+}

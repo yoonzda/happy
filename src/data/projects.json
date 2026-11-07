@@ -1,179 +1,295 @@
 [
   {
     "id": "proj-01",
-    "title": "모노 스튜디오 아카이브",
-    "keywords": ["브랜드 아이덴티티", "웹 디자인", "2026"],
-    "image": "/images/sample-01.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "옹진 관광 쿠폰",
+    "keywords": [
+      "쿠폰 시스템 기획",
+      "맞춤 UIUX",
+      "관광"
+    ],
     "links": [
-      { "label": "사이트 보러가기", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" },
-      { "label": "Behance", "url": "https://www.behance.net" }
+      {
+        "label": "기획(Notion)",
+        "url": "https://github.com/yoonzda/happy"
+      },
+      {
+        "label": "프로젝트 소개",
+        "url": "https://yoonzda.github.io/coupon/frontend/index.html"
+      },
+      {
+        "label": "메인 페이지",
+        "url": "https://yoonzda.github.io/coupon/frontend/tourist/index.html"
+      }
     ]
   },
   {
     "id": "proj-02",
-    "title": "키네틱 타이포그래피 실험실",
-    "keywords": ["인터랙티브", "모션 그래픽", "웹 실험"],
-    "image": "/images/sample-02.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "ONEDESK",
+    "keywords": [
+      "웹에이전시",
+      "인트라넷",
+      "업무 관리"
+    ],
     "links": [
-      { "label": "라이브 데모", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "라이브 데모",
+        "url": "https://github.com/yoonzda/happy"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   },
   {
     "id": "proj-03",
-    "title": "아우라 사운드스케이프",
-    "keywords": ["웹 오디오", "미니멀 UI", "프론트엔드"],
-    "image": "/images/sample-03.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "윤지서점",
+    "keywords": [
+      "블로그",
+      "원고지 UI",
+      "개인 프로젝트"
+    ],
     "links": [
-      { "label": "서비스 이동", "url": "https://github.com/yoonzda/happy" },
-      { "label": "작업 노트", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "메인 페이지",
+        "url": "https://yoonzda-record.vercel.app/"
+      },
+      {
+        "label": "작업 노트",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   },
   {
     "id": "proj-04",
-    "title": "노르딕 오브제 컬렉션",
-    "keywords": ["이커머스", "에디토리얼", "UI/UX"],
-    "image": "/images/sample-04.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "KCAB International",
+    "keywords": [
+      "대한 상사 중재원",
+      "외주",
+      "퍼블리싱"
+    ],
     "links": [
-      { "label": "웹사이트", "url": "https://github.com/yoonzda/happy" },
-      { "label": "Figma", "url": "https://www.figma.com" }
+      {
+        "label": "메인 페이지",
+        "url": "https://www.kcabinternational.or.kr/"
+      },
+      {
+        "label": "Figma",
+        "url": "https://www.figma.com"
+      }
     ]
   },
   {
     "id": "proj-05",
-    "title": "크로노스 디지털 저널",
-    "keywords": ["퍼블리싱", "디자인 시스템", "타이포그래피"],
-    "image": "/images/sample-05.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "우리은행 VDI",
+    "keywords": [
+      "퍼블리싱",
+      "외주",
+      "피그마"
+    ],
     "links": [
-      { "label": "웹사이트", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "사이트맵",
+        "url": "https://yoonzda.github.io/wooriBank/siteMap.html"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   },
   {
     "id": "proj-06",
-    "title": "벨로체 모빌리티 대시보드",
-    "keywords": ["프로덕트 디자인", "인터페이스", "프로토타입"],
-    "image": "/images/sample-06.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "마음드림센터",
+    "keywords": [
+      "복지관 사이트",
+      "그누보드",
+      "PHP"
+    ],
     "links": [
-      { "label": "프로젝트 보기", "url": "https://github.com/yoonzda/happy" },
-      { "label": "Notion", "url": "https://www.notion.so" }
+      {
+        "label": "웹사이트",
+        "url": "https://heartdream.co.kr/"
+      },
+      {
+        "label": "Notion",
+        "url": "https://www.notion.so"
+      }
     ]
   },
   {
     "id": "proj-07",
-    "title": "아틀리에 세라믹 전시",
-    "keywords": ["디지털 전시", "아트 디렉션", "웹"],
-    "image": "/images/sample-07.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "선두교회",
+    "keywords": [
+      "교회 사이트",
+      "그누보드",
+      "반응형"
+    ],
     "links": [
-      { "label": "전시 보러가기", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "https://sundoo.org/"
+      }
     ]
   },
   {
     "id": "proj-08",
-    "title": "펄스 데이터 비주얼라이저",
-    "keywords": ["데이터 시각화", "대시보드", "웹앱"],
-    "image": "/images/sample-08.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "CMF",
+    "keywords": [
+      "디자인지원센터",
+      "디자인 소재",
+      "PHP"
+    ],
     "links": [
-      { "label": "라이브 데모", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "http://cmf.idsc.kr/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   },
   {
     "id": "proj-09",
-    "title": "호라이즌 공간 아카이브",
-    "keywords": ["공간 디자인", "온라인 갤러리", "크리에이티브"],
-    "image": "/images/sample-09.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "파워인포텍",
+    "keywords": [
+      "외주",
+      "원페이지",
+      "아임웹"
+    ],
     "links": [
-      { "label": "아카이브 입장", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "작업페이지",
+        "url": "https://yoonzda.github.io/powerinfotech"
+      },
+      {
+        "label": "운영사이트",
+        "url": "https://itkorea.net/"
+      }
     ]
   },
   {
     "id": "proj-10",
-    "title": "페이퍼 앤 잉크 프레스",
-    "keywords": ["편집 디자인", "아카이브", "미니멀"],
-    "image": "/images/sample-10.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "LADUREE",
+    "keywords": [
+      "첫 포트폴리오",
+      "마카롱"
+    ],
     "links": [
-      { "label": "웹사이트", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "https://yoonzda.github.io/LADUREE/"
+      }
     ]
   },
   {
     "id": "proj-11",
-    "title": "솔스티스 웨더 인터페이스",
-    "keywords": ["모바일 웹", "마이크로 인터랙션", "API"],
-    "image": "/images/sample-11.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "switzerland",
+    "keywords": [
+      "스위스",
+      "관광지 소개",
+      "반응형"
+    ],
     "links": [
-      { "label": "앱 실행하기", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "메인 페이지",
+        "url": "https://yoonzda.github.io/switzerland/index.html"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   },
   {
     "id": "proj-12",
-    "title": "포르마 건축 포트폴리오",
-    "keywords": ["건축 사진", "그리드 레이아웃", "웹"],
-    "image": "/images/sample-12.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "백령도 점박이물범",
+    "keywords": [
+      "프로그램 신청",
+      "관리자 페이지"
+    ],
     "links": [
-      { "label": "웹사이트", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "http://www.spotted-seal.com/"
+      }
     ]
   },
   {
     "id": "proj-13",
-    "title": "루멘 카메라 UI 컨셉",
-    "keywords": ["인터페이스", "하드웨어 UI", "컨셉 디자인"],
-    "image": "/images/sample-13.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "소야랑",
+    "keywords": [
+      "프로그램 신청",
+      "신청 관리",
+      "통계 관리",
+      "SMS"
+    ],
     "links": [
-      { "label": "케이스 스터디", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "https://soyarang.kr/"
+      }
     ]
   },
   {
     "id": "proj-14",
-    "title": "에코즈 신디사이저 랩",
-    "keywords": ["사운드 디자인", "웹 애플리케이션", "인터랙션"],
-    "image": "/images/sample-14.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "인천광역시 계양구체육회",
+    "keywords": [
+      "프로그램 신청",
+      "회원/비회원 신청",
+      "결제 시스템"
+    ],
     "links": [
-      { "label": "실행하기", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "https://gygsports.or.kr/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   },
   {
     "id": "proj-15",
-    "title": "버지 디자인 시스템",
-    "keywords": ["컴포넌트 모듈", "디자인 토큰", "문서화"],
-    "image": "/images/sample-15.svg",
-    "gridSpan": "auto",
-    "hoverZoom": "in",
+    "title": "WEB site maker",
+    "keywords": [
+      "커스텀 웹사이트"
+    ],
     "links": [
-      { "label": "문서 보러가기", "url": "https://github.com/yoonzda/happy" },
-      { "label": "GitHub", "url": "https://github.com/yoonzda/happy" }
+      {
+        "label": "웹사이트",
+        "url": "https://yoonzda.github.io/tem-2/"
+      },
+      {
+        "label": "이전 프로젝트",
+        "url": "https://yoonzda.github.io/grid/"
+      }
+    ]
+  },
+  {
+    "id": "proj-1794042087769",
+    "title": "인스밸리",
+    "keywords": [
+      "사내 프로젝트",
+      "기획/디자인/퍼블리싱",
+      "보험 대리점"
+    ],
+    "links": [
+      {
+        "label": "참톡",
+        "url": "https://github.com/yoonzda/happy"
+      },
+      {
+        "label": "미러링",
+        "url": "https://github.com/yoonzda/happy"
+      },
+      {
+        "label": "참챗봇",
+        "url": "https://github.com/yoonzda/happy"
+      }
     ]
   }
 ]

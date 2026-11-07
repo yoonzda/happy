@@ -38,39 +38,6 @@ function localProjectsAdminPlugin() {
           return;
         }
 
-        if (req.url === '/__local_api/upload' && req.method === 'POST') {
-          let body = '';
-          req.on('data', (chunk) => {
-            body += chunk.toString();
-          });
-          req.on('end', () => {
-            try {
-              const { filename, dataUrl } = JSON.parse(body);
-              const matches = /^data:([A-Za-z-+/]+);base64,(.+)$/.exec(dataUrl);
-              if (!matches || matches.length !== 3) {
-                throw new Error('Invalid image dataUrl');
-              }
-              const buffer = Buffer.from(matches[2], 'base64');
-              const safeName = filename
-                .replace(/[^a-zA-Z0-9._-]/g, '_')
-                .replace(/^_+/, '');
-              const finalName = `${Date.now()}-${safeName || 'image.png'}`;
-              const imagesDir = path.resolve(process.cwd(), 'public/images');
-              if (!fs.existsSync(imagesDir)) {
-                fs.mkdirSync(imagesDir, { recursive: true });
-              }
-              fs.writeFileSync(path.join(imagesDir, finalName), buffer);
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ ok: true, url: `/images/${finalName}` }));
-            } catch (err) {
-              res.statusCode = 400;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ ok: false, error: err.message }));
-            }
-          });
-          return;
-        }
-
         next();
       });
     },

@@ -6,7 +6,34 @@ import BentoGridView from './components/views/BentoGridView/BentoGridView';
 import AdminView from './components/views/AdminView/AdminView';
 import styles from './App.module.css';
 
-const STORAGE_KEY = 'happy_portfolio_projects_v1';
+const STORAGE_KEY = 'happy_portfolio_projects_v3';
+const LEGACY_KEYS = [
+  'happy_portfolio_projects_v3',
+  'happy_portfolio_projects_v2',
+  'happy_portfolio_projects_v1',
+];
+
+function loadSavedProjects() {
+  try {
+    for (const key of LEGACY_KEYS) {
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map(({ id, title, keywords, links }) => ({
+            id,
+            title,
+            keywords: Array.isArray(keywords) ? keywords : [],
+            links: Array.isArray(links) ? links : [],
+          }));
+        }
+      }
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return null;
+}
 
 function checkIsAdminRoute() {
   return (
@@ -17,28 +44,12 @@ function checkIsAdminRoute() {
 
 export default function App() {
   const [projects, setProjects] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
-        }
-      }
-    } catch {
-      // ignore storage errors
-    }
-    return initialProjects;
+    return loadSavedProjects() || initialProjects;
   });
 
   const [viewMode, setViewMode] = useState('slide'); // 'slide' | 'grid'
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isAdmin, setIsAdmin] = useState(checkIsAdminRoute);
-
-  // Sync with initialProjects if updated in dev
-  useEffect(() => {
-    setProjects(initialProjects);
-  }, []);
 
   useEffect(() => {
     const syncRoute = () => {
@@ -107,7 +118,7 @@ export default function App() {
         <CircleIconButton
           icon={viewMode === 'slide' ? 'grid' : 'slide'}
           ariaLabel={
-            viewMode === 'slide' ? '그리드 보기로 전환' : '슬라이드 보기로 전환'
+            viewMode === 'slide' ? '목록 보기로 전환' : '슬라이드 보기로 전환'
           }
           onClick={toggleViewMode}
         />

@@ -7,15 +7,17 @@ const ICONS = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2"
       strokeLinecap="square"
       strokeLinejoin="miter"
       className={styles.icon}
     >
-      <rect x="3" y="3" width="7" height="7" />
-      <rect x="14" y="3" width="7" height="7" />
-      <rect x="3" y="14" width="7" height="7" />
-      <rect x="14" y="14" width="7" height="7" />
+      <rect x="3.5" y="5" width="2" height="2" fill="currentColor" stroke="none" />
+      <line x1="9" y1="6" x2="20.5" y2="6" />
+      <rect x="3.5" y="11" width="2" height="2" fill="currentColor" stroke="none" />
+      <line x1="9" y1="12" x2="20.5" y2="12" />
+      <rect x="3.5" y="17" width="2" height="2" fill="currentColor" stroke="none" />
+      <line x1="9" y1="18" x2="20.5" y2="18" />
     </svg>
   ),
   slide: (
@@ -23,12 +25,13 @@ const ICONS = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2"
       strokeLinecap="square"
       strokeLinejoin="miter"
       className={styles.icon}
     >
-      <rect x="3" y="5" width="18" height="14" />
+      <rect x="3" y="4" width="14" height="12" />
+      <polyline points="7 19.5 20.5 19.5 20.5 8" />
     </svg>
   ),
   prev: (
@@ -36,12 +39,12 @@ const ICONS = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2"
       strokeLinecap="square"
       strokeLinejoin="miter"
       className={styles.icon}
     >
-      <polyline points="15 18 9 12 15 6" />
+      <polyline points="15 6 9 12 15 18" />
     </svg>
   ),
   next: (
@@ -49,52 +52,56 @@ const ICONS = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2"
       strokeLinecap="square"
       strokeLinejoin="miter"
       className={styles.icon}
     >
-      <polyline points="9 18 15 12 9 6" />
+      <polyline points="9 6 15 12 9 18" />
     </svg>
   ),
-  edit: (
+  up: (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2"
       strokeLinecap="square"
       strokeLinejoin="miter"
       className={styles.icon}
     >
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="4" y1="12" x2="20" y2="12" />
-      <line x1="4" y1="18" x2="14" y2="18" />
+      <polyline points="6 15 12 9 18 15" />
     </svg>
   ),
-  close: (
+  down: (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2"
       strokeLinecap="square"
       strokeLinejoin="miter"
       className={styles.icon}
     >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
+      <polyline points="6 9 12 15 18 9" />
     </svg>
   ),
 };
 
 export default function CircleIconButton({
   icon = 'grid',
+  variant = 'circle',
   ariaLabel,
   onClick,
   className = '',
 }) {
-  const classes = [styles.button, className].filter(Boolean).join(' ');
+  const classes = [
+    styles.button,
+    variant === 'plainLarge' ? styles.plainLarge : '',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <button

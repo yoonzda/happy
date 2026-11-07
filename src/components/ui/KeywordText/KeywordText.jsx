@@ -6,11 +6,14 @@ export default function KeywordText({ keywords = [], className = '' }) {
 
   return (
     <ul className={[styles.list, className].filter(Boolean).join(' ')}>
-      {keywords.map((word, index) => (
-        <li key={`${word}-${index}`} className={styles.item}>
-          {word}
-        </li>
-      ))}
+      {keywords.map((word, index) => {
+        const formatted = String(word).startsWith('#') ? word : `#${word}`;
+        return (
+          <li key={`${word}-${index}`} className={styles.item}>
+            {formatted}
+          </li>
+        );
+      })}
     </ul>
   );
 }
