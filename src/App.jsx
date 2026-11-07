@@ -38,6 +38,7 @@ function loadSavedProjects() {
 function checkIsAdminRoute() {
   return (
     window.location.pathname === '/admin' ||
+    window.location.pathname.endsWith('/admin') ||
     window.location.hash === '#admin'
   );
 }
@@ -92,8 +93,9 @@ export default function App() {
   const handleCloseAdmin = () => {
     if (window.location.hash === '#admin') {
       window.history.pushState('', document.title, window.location.pathname);
-    } else if (window.location.pathname === '/admin') {
-      window.history.pushState({}, '', '/');
+    } else if (window.location.pathname.endsWith('/admin')) {
+      const basePath = window.location.pathname.replace(/\/admin$/, '') || '/';
+      window.history.pushState({}, '', basePath);
     }
     setIsAdmin(false);
   };

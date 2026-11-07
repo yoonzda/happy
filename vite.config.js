@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, build } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,6 +6,20 @@ import path from 'node:path';
 function localProjectsAdminPlugin() {
   return {
     name: 'local-projects-admin',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html, ctx) {
+        if (ctx.server) {
+          return html
+            .replace(/<link[^>]*data-prod-only[^>]*>\s*/g, '')
+            .replace(
+              /<script[^>]*data-prod-only[^>]*><\/script>/,
+              '<script type="module" src="/src/main.jsx"></script>'
+            );
+        }
+        return html;
+      },
+    },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (req.url === '/__local_api/status' && req.method === 'GET') {
@@ -19,7 +33,7 @@ function localProjectsAdminPlugin() {
           req.on('data', (chunk) => {
             body += chunk.toString();
           });
-          req.on('end', () => {
+          req.on('end', async () => {
             try {
               const parsed = JSON.parse(body);
               if (!Array.isArray(parsed)) {
@@ -27,6 +41,11 @@ function localProjectsAdminPlugin() {
               }
               const targetPath = path.resolve(process.cwd(), 'src/data/projects.json');
               fs.writeFileSync(targetPath, JSON.stringify(parsed, null, 2) + '\n', 'utf-8');
+              try {
+                await build({ configFile: path.resolve(process.cwd(), 'vite.config.js') });
+              } catch {
+                // ignore background bundle errors during dev
+              }
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ ok: true }));
             } catch (err) {
@@ -45,8 +64,21 @@ function localProjectsAdminPlugin() {
 }
 
 export default defineConfig({
+  base: './',
   plugins: [react(), localProjectsAdminPlugin()],
   resolve: {
     preserveSymlinks: true,
+  },
+  build: {
+    outDir: 'assets',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: path.resolve(process.cwd(), 'src/main.jsx'),
+      output: {
+        entryFileNames: 'app.js',
+        chunkFileNames: '[name].js',
+        assetFileNames: 'app.[ext]',
+      },
+    },
   },
 });
