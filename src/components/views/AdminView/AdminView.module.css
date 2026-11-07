@@ -1,0 +1,260 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  padding: var(--edge-padding-desktop);
+  color: var(--color-text-primary);
+}
+
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.statusMessage {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.sidebar {
+  border: 1px solid var(--color-border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebarTitle {
+  font-size: 0.95rem;
+  font-weight: var(--weight-semibold);
+}
+
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+.projectItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-smooth),
+    background-color var(--duration-fast) var(--ease-smooth);
+}
+
+.projectItemActive {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-surface);
+}
+
+.projectItemInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.projectItemIndex {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.projectItemTitle {
+  font-size: 0.92rem;
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.orderControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.smallBtn {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  padding: 2px 6px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.smallBtn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-strong);
+}
+
+.editor {
+  border: 1px solid var(--color-border);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.label {
+  font-size: 0.88rem;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--color-border-strong);
+}
+
+.imageRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fileLabel {
+  display: inline-block;
+  padding: 9px 14px;
+  border: 1px solid var(--color-border-strong);
+  font-size: 0.85rem;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fileInput {
+  display: none;
+}
+
+.linksList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.linkRow {
+  display: grid;
+  grid-template-columns: 160px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.primaryBadge {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-bottom: -4px;
+}
+
+.editorFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.saveButton {
+  padding: 10px 22px;
+  background-color: var(--color-text-primary);
+  color: var(--color-bg);
+  font-size: 0.92rem;
+  font-weight: var(--weight-medium);
+}
+
+.saveButton:hover {
+  opacity: 0.85;
+}
+
+.deleteButton {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+.deleteButton:hover {
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 860px) {
+  .page {
+    padding: var(--edge-padding-mobile);
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldRow,
+  .linkRow {
+    grid-template-columns: 1fr;
+  }
+}

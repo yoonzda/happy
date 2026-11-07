@@ -1,0 +1,22 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 20px;
+}
+
+.item {
+  font-family: var(--font-sans);
+  font-size: var(--size-keyword);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--tracking-normal);
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .list {
+    gap: 6px 14px;
+  }
+}

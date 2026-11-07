@@ -1,0 +1,13 @@
+.topRightToggle {
+  position: fixed;
+  top: var(--edge-padding-desktop);
+  right: var(--edge-padding-desktop);
+  z-index: 50;
+}
+
+@media (max-width: 768px) {
+  .topRightToggle {
+    top: var(--edge-padding-mobile);
+    right: var(--edge-padding-mobile);
+  }
+}
