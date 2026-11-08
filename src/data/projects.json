@@ -5,19 +5,18 @@
     "keywords": [
       "쿠폰 시스템 기획",
       "맞춤 UIUX",
-      "관광"
+      "관광",
+      "지역 관광 플랫폼",
+      "쿠폰 발급·정산 플로우",
+      "UI/UX 기획·퍼블리싱"
     ],
     "links": [
-      {
-        "label": "기획(Notion)",
-        "url": "https://github.com/yoonzda/happy"
-      },
       {
         "label": "프로젝트 소개",
         "url": "https://yoonzda.github.io/coupon/frontend/index.html"
       },
       {
-        "label": "메인 페이지",
+        "label": "라이브 데모",
         "url": "https://yoonzda.github.io/coupon/frontend/tourist/index.html"
       }
     ]
@@ -34,10 +33,6 @@
       {
         "label": "라이브 데모",
         "url": "https://github.com/yoonzda/happy"
-      },
-      {
-        "label": "GitHub",
-        "url": "https://github.com/yoonzda/happy"
       }
     ]
   },
@@ -51,12 +46,8 @@
     ],
     "links": [
       {
-        "label": "메인 페이지",
+        "label": "라이브 데모",
         "url": "https://yoonzda-record.vercel.app/"
-      },
-      {
-        "label": "작업 노트",
-        "url": "https://github.com/yoonzda/happy"
       }
     ]
   },
@@ -66,16 +57,19 @@
     "keywords": [
       "대한 상사 중재원",
       "외주",
-      "퍼블리싱"
+      "퍼블리싱",
+      "국제중재기관",
+      "다국어 웹 퍼블리싱",
+      "웹 접근성·반응형"
     ],
     "links": [
       {
-        "label": "메인 페이지",
+        "label": "운영 사이트",
         "url": "https://www.kcabinternational.or.kr/"
       },
       {
-        "label": "Figma",
-        "url": "https://www.figma.com"
+        "label": "라이브 데모",
+        "url": "https://yoonzda.github.io/kcab/"
       }
     ]
   },
@@ -85,16 +79,14 @@
     "keywords": [
       "퍼블리싱",
       "외주",
-      "피그마"
+      "피그마",
+      "금융권 업무 시스템",
+      "UI 표준화 퍼블리싱"
     ],
     "links": [
       {
-        "label": "사이트맵",
+        "label": "Site Map",
         "url": "https://yoonzda.github.io/wooriBank/siteMap.html"
-      },
-      {
-        "label": "GitHub",
-        "url": "https://github.com/yoonzda/happy"
       }
     ]
   },
@@ -104,16 +96,15 @@
     "keywords": [
       "복지관 사이트",
       "그누보드",
-      "PHP"
+      "PHP",
+      "심리상담·복지기관",
+      "커스텀 게시판",
+      "그누보드·PHP"
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "운영 사이트",
         "url": "https://heartdream.co.kr/"
-      },
-      {
-        "label": "Notion",
-        "url": "https://www.notion.so"
       }
     ]
   },
@@ -127,7 +118,7 @@
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "운영 사이트",
         "url": "https://sundoo.org/"
       }
     ]
@@ -138,16 +129,14 @@
     "keywords": [
       "디자인지원센터",
       "디자인 소재",
-      "PHP"
+      "PHP",
+      "디자인 소재 아카이브",
+      "다중 필터 검색 UI"
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "운영 사이트",
         "url": "http://cmf.idsc.kr/"
-      },
-      {
-        "label": "GitHub",
-        "url": "https://github.com/yoonzda/happy"
       }
     ]
   },
@@ -157,15 +146,16 @@
     "keywords": [
       "외주",
       "원페이지",
-      "아임웹"
+      "아임웹",
+      "인터랙티브 원페이지"
     ],
     "links": [
       {
-        "label": "작업페이지",
+        "label": "라이브 데모",
         "url": "https://yoonzda.github.io/powerinfotech"
       },
       {
-        "label": "운영사이트",
+        "label": "운영 사이트",
         "url": "https://itkorea.net/"
       }
     ]
@@ -175,11 +165,15 @@
     "title": "LADUREE",
     "keywords": [
       "첫 포트폴리오",
-      "마카롱"
+      "마카롱",
+      "디저트 브랜드 웹",
+      "웹 디자인·퍼블리싱",
+      "UI 리디자인",
+      "개인 퍼블리싱 작업"
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "작업물 보기",
         "url": "https://yoonzda.github.io/LADUREE/"
       }
     ]
@@ -188,18 +182,17 @@
     "id": "proj-11",
     "title": "switzerland",
     "keywords": [
-      "스위스",
-      "관광지 소개",
-      "반응형"
+      "여행·관광 가이드 웹",
+      "인터랙티브 레이아웃",
+      "반응형 퍼블리싱",
+      "비주얼 스토리텔링",
+      "여행 소개 웹사이트",
+      "개인 퍼블리싱 작업"
     ],
     "links": [
       {
-        "label": "메인 페이지",
+        "label": "작업물 보기",
         "url": "https://yoonzda.github.io/switzerland/index.html"
-      },
-      {
-        "label": "GitHub",
-        "url": "https://github.com/yoonzda/happy"
       }
     ]
   },
@@ -208,11 +201,13 @@
     "title": "백령도 점박이물범",
     "keywords": [
       "프로그램 신청",
-      "관리자 페이지"
+      "관리자 페이지",
+      "생태관광 예약 서비스",
+      "예약·일정 관리 어드민"
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "운영 사이트",
         "url": "http://www.spotted-seal.com/"
       }
     ]
@@ -224,11 +219,14 @@
       "프로그램 신청",
       "신청 관리",
       "통계 관리",
-      "SMS"
+      "SMS",
+      "지역 체험 플랫폼",
+      "예약 통계·SMS 연동",
+      "통합 관리자 구축"
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "운영 사이트",
         "url": "https://soyarang.kr/"
       }
     ]
@@ -239,11 +237,14 @@
     "keywords": [
       "프로그램 신청",
       "회원/비회원 신청",
-      "결제 시스템"
+      "결제 시스템",
+      "공공 체육시설 포털",
+      "회원·비회원 수강결제",
+      "온라인 결제 연동"
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "운영 사이트",
         "url": "https://gygsports.or.kr/"
       },
       {
@@ -260,7 +261,7 @@
     ],
     "links": [
       {
-        "label": "웹사이트",
+        "label": "작업물 보기",
         "url": "https://yoonzda.github.io/tem-2/"
       },
       {
