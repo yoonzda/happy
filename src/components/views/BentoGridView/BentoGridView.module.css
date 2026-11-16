@@ -1,5 +1,5 @@
 .page {
-  min-height: 100vh;
+  min-height: max(100dvh, 640px);
   width: 100%;
   background-color: var(--color-bg);
   padding: calc(var(--edge-padding-desktop) + 64px) var(--edge-padding-desktop)

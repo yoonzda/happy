@@ -57,6 +57,35 @@ function localProjectsAdminPlugin() {
           return;
         }
 
+        if (req.url === '/__local_api/profile' && req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk) => {
+            body += chunk.toString();
+          });
+          req.on('end', async () => {
+            try {
+              const parsed = JSON.parse(body);
+              if (!parsed || typeof parsed !== 'object') {
+                throw new Error('Profile data must be an object');
+              }
+              const targetPath = path.resolve(process.cwd(), 'src/data/profile.json');
+              fs.writeFileSync(targetPath, JSON.stringify(parsed, null, 2) + '\n', 'utf-8');
+              try {
+                await build({ configFile: path.resolve(process.cwd(), 'vite.config.js') });
+              } catch {
+                // ignore background bundle errors during dev
+              }
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ ok: true }));
+            } catch (err) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ ok: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
         next();
       });
     },

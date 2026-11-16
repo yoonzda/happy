@@ -6,6 +6,10 @@
   gap: 8px 20px;
 }
 
+.alignLeft {
+  justify-content: flex-start;
+}
+
 .item {
   font-family: var(--font-sans);
   font-size: var(--size-keyword);

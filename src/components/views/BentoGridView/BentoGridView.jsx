@@ -38,7 +38,7 @@ export default function BentoGridView({ projects = [] }) {
                 </div>
 
                 <div className={styles.right}>
-                  <KeywordText keywords={project.keywords} />
+                  <KeywordText keywords={project.keywords} align="left" />
 
                   {project.links && project.links.length > 0 && (
                     <div className={styles.linksGroup}>

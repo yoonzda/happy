@@ -91,6 +91,7 @@ const ICONS = {
 export default function CircleIconButton({
   icon = 'grid',
   variant = 'circle',
+  isOpen = false,
   ariaLabel,
   onClick,
   className = '',
@@ -98,6 +99,7 @@ export default function CircleIconButton({
   const classes = [
     styles.button,
     variant === 'plainLarge' ? styles.plainLarge : '',
+    variant === 'darkSolid' ? styles.darkSolid : '',
     className,
   ]
     .filter(Boolean)
@@ -110,7 +112,22 @@ export default function CircleIconButton({
       aria-label={ariaLabel || icon}
       onClick={onClick}
     >
-      {ICONS[icon] || ICONS.grid}
+      {icon === 'introMorph' ? (
+        <span
+          className={[
+            styles.morphBox,
+            isOpen ? styles.morphBoxOpen : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          aria-hidden="true"
+        >
+          <span className={styles.morphDot} />
+          <span className={styles.morphStem} />
+        </span>
+      ) : (
+        ICONS[icon] || ICONS.grid
+      )}
     </button>
   );
 }

@@ -1,14 +1,25 @@
+.topLeftToggle {
+  position: fixed;
+  top: var(--edge-padding-desktop);
+  left: var(--edge-padding-desktop);
+  z-index: 50;
+}
+
 .topRightToggle {
   position: fixed;
   top: var(--edge-padding-desktop);
   right: var(--edge-padding-desktop);
-  z-index: 50;
+  z-index: 30;
 }
 
 @media (max-width: 768px) {
+  .topLeftToggle {
+    top: var(--edge-padding-mobile);
+    left: var(--edge-padding-mobile);
+  }
+
   .topRightToggle {
     top: var(--edge-padding-mobile);
     right: var(--edge-padding-mobile);
   }
 }
-

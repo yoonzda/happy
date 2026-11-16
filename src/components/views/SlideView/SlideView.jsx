@@ -10,33 +10,52 @@ export default function SlideView({
   projects = [],
   currentIndex = 0,
   onChangeIndex,
+  paused = false,
+  typedSlidesRef,
 }) {
   const total = projects.length;
   const [flipDirection, setFlipDirection] = useState('next');
-  const [isTitleDone, setIsTitleDone] = useState(false);
+  const safeIndex = total > 0 ? ((currentIndex % total) + total) % total : 0;
+  const currentProject = projects[safeIndex] || null;
+  const slideKey = currentProject ? currentProject.id || safeIndex : safeIndex;
+
+  const [skipAnim, setSkipAnim] = useState(() =>
+    Boolean(typedSlidesRef?.current?.has(slideKey))
+  );
+  const [isTitleDone, setIsTitleDone] = useState(() =>
+    Boolean(typedSlidesRef?.current?.has(slideKey))
+  );
   const wheelLockRef = useRef(false);
   const touchStartRef = useRef(null);
 
-  const safeIndex = total > 0 ? ((currentIndex % total) + total) % total : 0;
-
   useEffect(() => {
-    setIsTitleDone(false);
-  }, [safeIndex]);
+    const doneBefore = Boolean(typedSlidesRef?.current?.has(slideKey));
+    setSkipAnim(doneBefore);
+    setIsTitleDone(doneBefore);
+  }, [slideKey, typedSlidesRef]);
+
+  const handleTypingComplete = () => {
+    if (typedSlidesRef?.current) {
+      typedSlidesRef.current.add(slideKey);
+    }
+    setIsTitleDone(true);
+  };
 
   const goPrev = useCallback(() => {
-    if (total === 0) return;
+    if (total === 0 || paused) return;
     setFlipDirection('prev');
     onChangeIndex((prev) => (prev - 1 + total) % total);
-  }, [total, onChangeIndex]);
+  }, [total, paused, onChangeIndex]);
 
   const goNext = useCallback(() => {
-    if (total === 0) return;
+    if (total === 0 || paused) return;
     setFlipDirection('next');
     onChangeIndex((prev) => (prev + 1) % total);
-  }, [total, onChangeIndex]);
+  }, [total, paused, onChangeIndex]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (paused) return;
       if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         goPrev();
       } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
@@ -45,10 +64,16 @@ export default function SlideView({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goPrev, goNext]);
+  }, [goPrev, goNext, paused]);
 
   const handleWheel = (e) => {
-    if (wheelLockRef.current || total <= 1) return;
+    if (paused || wheelLockRef.current || total <= 1) return;
+
+    // 화면 높이가 낮아 세로 스크롤바가 생긴 상태에서는 마우스 휠로 슬라이드를 넘기지 않음
+    const hasVerticalScrollbar =
+      document.documentElement.scrollHeight > window.innerHeight + 2;
+    if (hasVerticalScrollbar) return;
+
     if (Math.abs(e.deltaY) < 25 && Math.abs(e.deltaX) < 25) return;
 
     wheelLockRef.current = true;
@@ -64,6 +89,7 @@ export default function SlideView({
   };
 
   const handleTouchStart = (e) => {
+    if (paused) return;
     if (e.touches && e.touches.length === 1) {
       touchStartRef.current = {
         x: e.touches[0].clientX,
@@ -73,7 +99,14 @@ export default function SlideView({
   };
 
   const handleTouchEnd = (e) => {
-    if (!touchStartRef.current || !e.changedTouches?.[0]) return;
+    if (paused || !touchStartRef.current || !e.changedTouches?.[0]) return;
+    const hasVerticalScrollbar =
+      document.documentElement.scrollHeight > window.innerHeight + 2;
+    if (hasVerticalScrollbar) {
+      touchStartRef.current = null;
+      return;
+    }
+
     const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
     const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
     touchStartRef.current = null;
@@ -101,7 +134,6 @@ export default function SlideView({
     );
   }
 
-  const currentProject = projects[safeIndex];
   const formattedCurrent = String(safeIndex + 1).padStart(2, '0');
   const formattedTotal = String(total).padStart(2, '0');
 
@@ -112,13 +144,14 @@ export default function SlideView({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div key={currentProject.id || safeIndex} className={styles.centerContent}>
+      <div key={slideKey} className={styles.centerContent}>
         <Title
           variant="hero"
           as="h1"
-          typing
+          typing={!skipAnim}
+          showCursor
           typingSpeed={74}
-          onTypingComplete={() => setIsTitleDone(true)}
+          onTypingComplete={handleTypingComplete}
         >
           {currentProject.title}
         </Title>
@@ -126,7 +159,11 @@ export default function SlideView({
         <div
           className={[
             styles.subReveal,
-            isTitleDone ? styles.subRevealVisible : '',
+            skipAnim
+              ? styles.subRevealInstant
+              : isTitleDone
+              ? styles.subRevealVisible
+              : '',
           ]
             .filter(Boolean)
             .join(' ')}
@@ -139,7 +176,11 @@ export default function SlideView({
             className={[
               styles.linksGroup,
               styles.subReveal,
-              isTitleDone ? styles.subRevealVisible : '',
+              skipAnim
+                ? styles.subRevealInstant
+                : isTitleDone
+                ? styles.subRevealVisible
+                : '',
             ]
               .filter(Boolean)
               .join(' ')}
