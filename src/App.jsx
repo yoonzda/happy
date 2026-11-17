@@ -9,7 +9,7 @@ import AdminView from './components/views/AdminView/AdminView';
 import styles from './App.module.css';
 
 const STORAGE_KEY = 'happy_portfolio_projects_v3';
-const PROFILE_STORAGE_KEY = 'happy_portfolio_profile_v4';
+const PROFILE_STORAGE_KEY = 'happy_portfolio_profile_v8';
 
 function loadSavedProjects() {
   try {

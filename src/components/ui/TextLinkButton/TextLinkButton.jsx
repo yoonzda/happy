@@ -10,11 +10,13 @@ export default function TextLinkButton({
   const classes = [styles.link, className].filter(Boolean).join(' ');
 
   if (href) {
+    const isExternalWeb =
+      href.startsWith('http://') || href.startsWith('https://');
     return (
       <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={isExternalWeb ? '_blank' : undefined}
+        rel={isExternalWeb ? 'noopener noreferrer' : undefined}
         className={classes}
         onClick={onClick}
       >
@@ -29,4 +31,3 @@ export default function TextLinkButton({
     </button>
   );
 }
-

@@ -32,6 +32,8 @@ export default function AdminView({
   const [profileData, setProfileData] = useState(() => ({
     headline: profile.headline || '기획부터 퍼블리싱까지, 윤지입니다',
     bio: profile.bio || '',
+    phone: profile.phone || '010-8901-2559',
+    email: profile.email || 'geeyounjee@gmail.com',
     keywords: Array.isArray(profile.keywords) ? profile.keywords : [],
     links: Array.isArray(profile.links) ? profile.links : [],
     sections: Array.isArray(profile.sections) ? profile.sections : [],
@@ -305,6 +307,8 @@ export default function AdminView({
     const normalizedProfile = {
       headline: profileData.headline.trim() || '기획부터 퍼블리싱까지, 윤지입니다',
       bio: profileData.bio.trim(),
+      phone: (profileData.phone || '').trim(),
+      email: (profileData.email || '').trim(),
       keywords: Array.isArray(profileData.keywords) ? profileData.keywords : [],
       links: (profileData.links || []).filter(
         (l) => l.label.trim() || l.url.trim()
@@ -621,7 +625,9 @@ export default function AdminView({
                   </div>
 
                   <div className={styles.fieldGroup}>
-                    <label className={styles.label}>자기소개 본문 (Bio)</label>
+                    <label className={styles.label}>
+                      자기소개 본문 (==단어==로 감싸면 노란 형광펜 표시)
+                    </label>
                     <textarea
                       rows={3}
                       className={styles.textarea}
@@ -633,6 +639,36 @@ export default function AdminView({
                         }))
                       }
                     />
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label}>연락처 (전화번호 / 이메일)</label>
+                    <div className={styles.linkRow}>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="전화번호"
+                        value={profileData.phone}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({
+                            ...prev,
+                            phone: e.target.value,
+                          }))
+                        }
+                      />
+                      <input
+                        type="email"
+                        className={styles.input}
+                        placeholder="이메일"
+                        value={profileData.email}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
                   </div>
 
                   <div className={styles.fieldGroup}>

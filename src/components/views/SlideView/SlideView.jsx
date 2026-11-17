@@ -26,7 +26,6 @@ export default function SlideView({
     Boolean(typedSlidesRef?.current?.has(slideKey))
   );
   const wheelLockRef = useRef(false);
-  const touchStartRef = useRef(null);
 
   useEffect(() => {
     const doneBefore = Boolean(typedSlidesRef?.current?.has(slideKey));
@@ -88,44 +87,6 @@ export default function SlideView({
     }, 550);
   };
 
-  const handleTouchStart = (e) => {
-    if (paused) return;
-    if (e.touches && e.touches.length === 1) {
-      touchStartRef.current = {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
-    }
-  };
-
-  const handleTouchEnd = (e) => {
-    if (paused || !touchStartRef.current || !e.changedTouches?.[0]) return;
-    const hasVerticalScrollbar =
-      document.documentElement.scrollHeight > window.innerHeight + 2;
-    if (hasVerticalScrollbar) {
-      touchStartRef.current = null;
-      return;
-    }
-
-    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
-    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
-    touchStartRef.current = null;
-
-    if (Math.abs(deltaY) >= Math.abs(deltaX) && Math.abs(deltaY) > 40) {
-      if (deltaY < 0) {
-        goNext();
-      } else {
-        goPrev();
-      }
-    } else if (Math.abs(deltaX) > 45) {
-      if (deltaX < 0) {
-        goNext();
-      } else {
-        goPrev();
-      }
-    }
-  };
-
   if (total === 0) {
     return (
       <main className={styles.container}>
@@ -141,8 +102,6 @@ export default function SlideView({
     <main
       className={styles.container}
       onWheel={handleWheel}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
       <div key={slideKey} className={styles.centerContent}>
         <Title
