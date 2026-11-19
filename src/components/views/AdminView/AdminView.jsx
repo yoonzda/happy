@@ -16,6 +16,9 @@ export default function AdminView({
   const [items, setItems] = useState(() =>
     projects.map((p) => ({
       ...p,
+      period: p.period || '',
+      role: p.role || '',
+      description: p.description || '',
       keywords: Array.isArray(p.keywords) ? p.keywords : [],
       links:
         Array.isArray(p.links) && p.links.length > 0
@@ -77,6 +80,9 @@ export default function AdminView({
     const newProj = {
       id: newId,
       title: `새 프로젝트 ${nextNum}`,
+      period: '',
+      role: '',
+      description: '',
       keywords: ['웹 디자인', '2026'],
       links: [
         { label: '웹사이트', url: 'https://github.com/yoonzda/happy' },
@@ -299,6 +305,9 @@ export default function AdminView({
       return {
         id: item.id,
         title: item.title.trim() || '제목 없음',
+        period: (item.period || '').trim(),
+        role: (item.role || '').trim(),
+        description: (item.description || '').trim(),
         keywords: Array.isArray(item.keywords) ? item.keywords : [],
         links: cleanLinks,
       };
@@ -449,6 +458,46 @@ export default function AdminView({
                       value={current.title}
                       onChange={(e) =>
                         updateCurrent({ title: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className={styles.metaFieldRow}>
+                    <div className={styles.fieldGroup}>
+                      <label className={styles.label}>작업 기간 (선택)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="예: 2025.03 — 2025.05"
+                        value={current.period || ''}
+                        onChange={(e) =>
+                          updateCurrent({ period: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className={styles.fieldGroup}>
+                      <label className={styles.label}>담당 역할 (선택)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="예: 기획 · UI 디자인 · 퍼블리싱"
+                        value={current.role || ''}
+                        onChange={(e) =>
+                          updateCurrent({ role: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label}>프로젝트 설명</label>
+                    <textarea
+                      rows={4}
+                      className={styles.textarea}
+                      placeholder="프로젝트 개요, 주요 기능, 작업 포인트 등을 자유롭게 적어 주세요."
+                      value={current.description || ''}
+                      onChange={(e) =>
+                        updateCurrent({ description: e.target.value })
                       }
                     />
                   </div>

@@ -4,7 +4,7 @@ import KeywordText from '../../ui/KeywordText/KeywordText';
 import TextLinkButton from '../../ui/TextLinkButton/TextLinkButton';
 import styles from './BentoGridView.module.css';
 
-export default function BentoGridView({ projects = [] }) {
+export default function BentoGridView({ projects = [], onOpenDetail }) {
   return (
     <main className={styles.page}>
       <div className={styles.wrapper}>
@@ -40,9 +40,14 @@ export default function BentoGridView({ projects = [] }) {
                 <div className={styles.right}>
                   <KeywordText keywords={project.keywords} align="left" />
 
-                  {project.links && project.links.length > 0 && (
-                    <div className={styles.linksGroup}>
-                      {project.links.map((link, lIdx) => (
+                  <div className={styles.linksGroup}>
+                    {onOpenDetail && (
+                      <TextLinkButton onClick={() => onOpenDetail(index)}>
+                        설명
+                      </TextLinkButton>
+                    )}
+                    {project.links &&
+                      project.links.map((link, lIdx) => (
                         <TextLinkButton
                           key={`${link.label}-${lIdx}`}
                           href={link.url}
@@ -50,8 +55,7 @@ export default function BentoGridView({ projects = [] }) {
                           {link.label}
                         </TextLinkButton>
                       ))}
-                    </div>
-                  )}
+                  </div>
                 </div>
               </li>
             );

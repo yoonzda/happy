@@ -193,6 +193,13 @@
   flex-shrink: 0;
 }
 
+.metaFieldRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  flex-shrink: 0;
+}
+
 .keywordChipList {
   display: flex;
   flex-wrap: wrap;
@@ -364,6 +371,7 @@
 }
 
 @media (max-width: 720px) {
+  .metaFieldRow,
   .linkRow {
     grid-template-columns: 1fr;
   }

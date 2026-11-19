@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import initialProjects from './data/projects.json';
 import initialProfile from './data/profile.json';
 import CircleIconButton from './components/ui/CircleIconButton/CircleIconButton';
+import ProjectDetailPanel from './components/ui/ProjectDetailPanel/ProjectDetailPanel';
 import SlideView from './components/views/SlideView/SlideView';
 import BentoGridView from './components/views/BentoGridView/BentoGridView';
-import ProfileView from './components/views/ProfileView/ProfileView';
 import AdminView from './components/views/AdminView/AdminView';
 import styles from './App.module.css';
 
@@ -17,12 +17,17 @@ function loadSavedProjects() {
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map(({ id, title, keywords, links }) => ({
-          id,
-          title,
-          keywords: Array.isArray(keywords) ? keywords : [],
-          links: Array.isArray(links) ? links : [],
-        }));
+        return parsed.map(
+          ({ id, title, keywords, links, period, role, description }) => ({
+            id,
+            title,
+            keywords: Array.isArray(keywords) ? keywords : [],
+            links: Array.isArray(links) ? links : [],
+            period: period || '',
+            role: role || '',
+            description: description || '',
+          })
+        );
       }
     }
   } catch {
@@ -63,8 +68,8 @@ export default function App() {
   );
 
   const [viewMode, setViewMode] = useState('slide'); // 'slide' | 'grid'
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [hasSeenProfileIntro, setHasSeenProfileIntro] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [detailIndex, setDetailIndex] = useState(0);
   const typedSlidesRef = useRef(new Set());
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -83,7 +88,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (isProfileOpen && !isAdmin) {
+    if (isDetailOpen && !isAdmin) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
     } else {
@@ -94,7 +99,7 @@ export default function App() {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     };
-  }, [isProfileOpen, isAdmin]);
+  }, [isDetailOpen, isAdmin]);
 
   const handleSaveProjects = async (updatedList) => {
     setProjects(updatedList);
@@ -170,27 +175,83 @@ export default function App() {
     );
   }
 
-  const toggleProfileMode = () => {
-    setIsProfileOpen((prev) => !prev);
+  const safeSlideIndex =
+    projects.length > 0
+      ? ((currentSlideIndex % projects.length) + projects.length) %
+        projects.length
+      : 0;
+
+  const safeDetailIndex =
+    projects.length > 0
+      ? ((detailIndex % projects.length) + projects.length) % projects.length
+      : 0;
+
+  const handleToggleTopLeftDetail = () => {
+    if (isDetailOpen) {
+      setIsDetailOpen(false);
+    } else if (projects.length > 0) {
+      setDetailIndex(safeSlideIndex);
+      setIsDetailOpen(true);
+    }
   };
 
-  const togglePortfolioViewMode = () => {
+  const handleOpenListDetail = (idx) => {
+    setDetailIndex(idx);
+    setIsDetailOpen(true);
+  };
+
+  const handleDetailPrev = () => {
+    if (projects.length === 0) return;
+    const prevIdx = (safeDetailIndex - 1 + projects.length) % projects.length;
+    setDetailIndex(prevIdx);
+    if (viewMode === 'slide') {
+      setCurrentSlideIndex(prevIdx);
+    }
+  };
+
+  const handleDetailNext = () => {
+    if (projects.length === 0) return;
+    const nextIdx = (safeDetailIndex + 1) % projects.length;
+    setDetailIndex(nextIdx);
+    if (viewMode === 'slide') {
+      setCurrentSlideIndex(nextIdx);
+    }
+  };
+
+  const handleToggleViewMode = () => {
+    setIsDetailOpen(false);
     setViewMode((prev) => (prev === 'slide' ? 'grid' : 'slide'));
   };
 
+  const activeDetailProject = projects[safeDetailIndex] || null;
+  const prevDetailIndex =
+    projects.length > 1
+      ? (safeDetailIndex - 1 + projects.length) % projects.length
+      : 0;
+  const nextDetailIndex =
+    projects.length > 1 ? (safeDetailIndex + 1) % projects.length : 0;
+  const prevDetailProject =
+    projects.length > 1 ? projects[prevDetailIndex] : null;
+  const nextDetailProject =
+    projects.length > 1 ? projects[nextDetailIndex] : null;
+  const showTopLeftButton =
+    projects.length > 0 && (viewMode === 'slide' || isDetailOpen);
+
   return (
     <>
-      <div className={styles.topLeftToggle}>
-        <CircleIconButton
-          icon="introMorph"
-          isOpen={isProfileOpen}
-          variant={isProfileOpen ? 'darkSolid' : 'circle'}
-          ariaLabel={
-            isProfileOpen ? '포트폴리오로 돌아가기' : '내 소개 보기'
-          }
-          onClick={toggleProfileMode}
-        />
-      </div>
+      {showTopLeftButton && (
+        <div className={styles.topLeftToggle}>
+          <CircleIconButton
+            icon="infoMorph"
+            isOpen={isDetailOpen}
+            variant={isDetailOpen ? 'darkSolid' : 'circle'}
+            ariaLabel={
+              isDetailOpen ? '프로젝트 설명 닫기' : '프로젝트 설명 보기'
+            }
+            onClick={handleToggleTopLeftDetail}
+          />
+        </div>
+      )}
 
       <div className={styles.topRightToggle}>
         <CircleIconButton
@@ -198,7 +259,7 @@ export default function App() {
           ariaLabel={
             viewMode === 'slide' ? '목록 보기로 전환' : '슬라이드 보기로 전환'
           }
-          onClick={togglePortfolioViewMode}
+          onClick={handleToggleViewMode}
         />
       </div>
 
@@ -207,20 +268,27 @@ export default function App() {
           projects={projects}
           currentIndex={currentSlideIndex}
           onChangeIndex={setCurrentSlideIndex}
-          paused={isProfileOpen}
+          paused={isDetailOpen}
           typedSlidesRef={typedSlidesRef}
         />
       ) : (
-        <BentoGridView projects={projects} />
+        <BentoGridView
+          projects={projects}
+          onOpenDetail={handleOpenListDetail}
+        />
       )}
 
-      <ProfileView
-        isOpen={isProfileOpen}
-        hasSeenIntro={hasSeenProfileIntro}
-        onMarkSeenIntro={() => setHasSeenProfileIntro(true)}
-        profile={profile}
-        projectCount={projects.length}
-        onReturnToPortfolio={() => setIsProfileOpen(false)}
+      <ProjectDetailPanel
+        isOpen={isDetailOpen}
+        project={activeDetailProject}
+        prevProject={prevDetailProject}
+        nextProject={nextDetailProject}
+        prevIndex={prevDetailIndex}
+        nextIndex={nextDetailIndex}
+        totalCount={projects.length}
+        onPrev={handleDetailPrev}
+        onNext={handleDetailNext}
+        onClose={() => setIsDetailOpen(false)}
       />
     </>
   );

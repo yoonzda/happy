@@ -16,8 +16,8 @@
   visibility: hidden;
   opacity: 0;
   clip-path: circle(
-    40px at calc(var(--edge-padding-desktop) + 28px)
-      calc(var(--edge-padding-desktop) + 28px)
+    0px at calc(100% - var(--edge-padding-desktop) - 24px)
+      calc(var(--edge-padding-desktop) + 16px)
   );
   transition: clip-path 0.48s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.32s ease 0.12s,
@@ -29,8 +29,8 @@
   visibility: visible;
   opacity: 1;
   clip-path: circle(
-    115vmax at calc(var(--edge-padding-desktop) + 28px)
-      calc(var(--edge-padding-desktop) + 28px)
+    115vmax at calc(100% - var(--edge-padding-desktop) - 24px)
+      calc(var(--edge-padding-desktop) + 16px)
   );
   transition: clip-path 0.56s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.2s ease,
@@ -276,15 +276,15 @@
 @media (max-width: 768px) {
   .overlay {
     clip-path: circle(
-      40px at calc(var(--edge-padding-mobile) + 28px)
-        calc(var(--edge-padding-mobile) + 28px)
+      0px at calc(100% - var(--edge-padding-mobile) - 20px)
+        calc(var(--edge-padding-mobile) + 14px)
     );
   }
 
   .overlayOpen {
     clip-path: circle(
-      115vmax at calc(var(--edge-padding-mobile) + 28px)
-        calc(var(--edge-padding-mobile) + 28px)
+      115vmax at calc(100% - var(--edge-padding-mobile) - 20px)
+        calc(var(--edge-padding-mobile) + 14px)
     );
   }
 }
@@ -292,15 +292,15 @@
 @media (max-width: 600px) {
   .overlay {
     clip-path: circle(
-      34px at calc(var(--edge-padding-mobile) + 24px)
-        calc(var(--edge-padding-mobile) + 24px)
+      0px at calc(100% - var(--edge-padding-mobile) - 20px)
+        calc(var(--edge-padding-mobile) + 14px)
     );
   }
 
   .overlayOpen {
     clip-path: circle(
-      115vmax at calc(var(--edge-padding-mobile) + 24px)
-        calc(var(--edge-padding-mobile) + 24px)
+      115vmax at calc(100% - var(--edge-padding-mobile) - 20px)
+        calc(var(--edge-padding-mobile) + 14px)
     );
   }
 

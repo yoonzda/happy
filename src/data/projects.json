@@ -1,11 +1,49 @@
 [
   {
+    "id": "proj-03",
+    "title": "윤지서점",
+    "period": "",
+    "role": "",
+    "description": "키보드로 글을 쓰다 보면 종종 종이와 펜이 그리워지곤 합니다. 편리함을 유지한 채 감성을 더하고 싶었습니다. 개인화, 쓴 글의 보기 방식 변경 등의 추가 업데이트를 고민하고 있습니다.",
+    "keywords": [
+      "블로그",
+      "원고지 UI",
+      "개인 프로젝트"
+    ],
+    "links": [
+      {
+        "label": "라이브 데모",
+        "url": "https://yoonzda-record.vercel.app/"
+      }
+    ]
+  },
+  {
+    "id": "proj-02",
+    "title": "ONEDESK",
+    "period": "",
+    "role": "",
+    "description": "",
+    "keywords": [
+      "웹에이전시",
+      "인트라넷",
+      "업무 관리"
+    ],
+    "links": [
+      {
+        "label": "라이브 데모",
+        "url": "https://github.com/yoonzda/happy"
+      }
+    ]
+  },
+  {
     "id": "proj-01",
     "title": "옹진 관광 쿠폰",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "쿠폰 시스템 기획",
       "맞춤 UIUX",
-      "관광",
       "지역 관광 플랫폼",
       "쿠폰 발급·정산 플로우",
       "UI/UX 기획·퍼블리싱"
@@ -22,42 +60,32 @@
     ]
   },
   {
-    "id": "proj-02",
-    "title": "ONEDESK",
+    "id": "proj-15",
+    "title": "WEB site maker",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
-      "웹에이전시",
-      "인트라넷",
-      "업무 관리"
+      "커스텀 웹사이트"
     ],
     "links": [
       {
-        "label": "라이브 데모",
-        "url": "https://github.com/yoonzda/happy"
-      }
-    ]
-  },
-  {
-    "id": "proj-03",
-    "title": "윤지서점",
-    "keywords": [
-      "블로그",
-      "원고지 UI",
-      "개인 프로젝트"
-    ],
-    "links": [
+        "label": "작업물 보기",
+        "url": "https://yoonzda.github.io/tem-2/"
+      },
       {
-        "label": "라이브 데모",
-        "url": "https://yoonzda-record.vercel.app/"
+        "label": "이전 프로젝트",
+        "url": "https://yoonzda.github.io/grid/"
       }
     ]
   },
   {
     "id": "proj-04",
     "title": "KCAB International",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
-      "대한 상사 중재원",
-      "외주",
-      "퍼블리싱",
       "국제중재기관",
       "다국어 웹 퍼블리싱",
       "웹 접근성·반응형"
@@ -76,10 +104,10 @@
   {
     "id": "proj-05",
     "title": "우리은행 VDI",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
-      "퍼블리싱",
-      "외주",
-      "피그마",
       "금융권 업무 시스템",
       "UI 표준화 퍼블리싱"
     ],
@@ -93,10 +121,10 @@
   {
     "id": "proj-06",
     "title": "마음드림센터",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
-      "복지관 사이트",
-      "그누보드",
-      "PHP",
       "심리상담·복지기관",
       "커스텀 게시판",
       "그누보드·PHP"
@@ -111,6 +139,9 @@
   {
     "id": "proj-07",
     "title": "선두교회",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "교회 사이트",
       "그누보드",
@@ -126,10 +157,10 @@
   {
     "id": "proj-08",
     "title": "CMF",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
-      "디자인지원센터",
-      "디자인 소재",
-      "PHP",
       "디자인 소재 아카이브",
       "다중 필터 검색 UI"
     ],
@@ -141,46 +172,11 @@
     ]
   },
   {
-    "id": "proj-09",
-    "title": "파워인포텍",
-    "keywords": [
-      "외주",
-      "원페이지",
-      "아임웹",
-      "인터랙티브 원페이지"
-    ],
-    "links": [
-      {
-        "label": "라이브 데모",
-        "url": "https://yoonzda.github.io/powerinfotech"
-      },
-      {
-        "label": "운영 사이트",
-        "url": "https://itkorea.net/"
-      }
-    ]
-  },
-  {
-    "id": "proj-10",
-    "title": "LADUREE",
-    "keywords": [
-      "첫 포트폴리오",
-      "마카롱",
-      "디저트 브랜드 웹",
-      "웹 디자인·퍼블리싱",
-      "UI 리디자인",
-      "개인 퍼블리싱 작업"
-    ],
-    "links": [
-      {
-        "label": "작업물 보기",
-        "url": "https://yoonzda.github.io/LADUREE/"
-      }
-    ]
-  },
-  {
     "id": "proj-11",
     "title": "switzerland",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "여행·관광 가이드 웹",
       "인터랙티브 레이아웃",
@@ -197,8 +193,30 @@
     ]
   },
   {
+    "id": "proj-10",
+    "title": "LADUREE",
+    "period": "",
+    "role": "",
+    "description": "",
+    "keywords": [
+      "디저트 브랜드 웹",
+      "웹 디자인·퍼블리싱",
+      "UI 리디자인",
+      "개인 퍼블리싱 작업"
+    ],
+    "links": [
+      {
+        "label": "작업물 보기",
+        "url": "https://yoonzda.github.io/LADUREE/"
+      }
+    ]
+  },
+  {
     "id": "proj-12",
     "title": "백령도 점박이물범",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "프로그램 신청",
       "관리자 페이지",
@@ -215,6 +233,9 @@
   {
     "id": "proj-13",
     "title": "소야랑",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "프로그램 신청",
       "신청 관리",
@@ -234,6 +255,9 @@
   {
     "id": "proj-14",
     "title": "인천광역시 계양구체육회",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "프로그램 신청",
       "회원/비회원 신청",
@@ -254,25 +278,11 @@
     ]
   },
   {
-    "id": "proj-15",
-    "title": "WEB site maker",
-    "keywords": [
-      "커스텀 웹사이트"
-    ],
-    "links": [
-      {
-        "label": "작업물 보기",
-        "url": "https://yoonzda.github.io/tem-2/"
-      },
-      {
-        "label": "이전 프로젝트",
-        "url": "https://yoonzda.github.io/grid/"
-      }
-    ]
-  },
-  {
     "id": "proj-1794042087769",
     "title": "인스밸리",
+    "period": "",
+    "role": "",
+    "description": "",
     "keywords": [
       "사내 프로젝트",
       "기획/디자인/퍼블리싱",
@@ -290,6 +300,27 @@
       {
         "label": "참챗봇",
         "url": "https://github.com/yoonzda/happy"
+      }
+    ]
+  },
+  {
+    "id": "proj-09",
+    "title": "파워인포텍",
+    "period": "",
+    "role": "",
+    "description": "",
+    "keywords": [
+      "아임웹",
+      "인터랙티브 원페이지"
+    ],
+    "links": [
+      {
+        "label": "라이브 데모",
+        "url": "https://yoonzda.github.io/powerinfotech"
+      },
+      {
+        "label": "운영 사이트",
+        "url": "https://itkorea.net/"
       }
     ]
   }

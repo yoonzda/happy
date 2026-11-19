@@ -76,7 +76,9 @@ export default function SlideView({
     if (Math.abs(e.deltaY) < 25 && Math.abs(e.deltaX) < 25) return;
 
     wheelLockRef.current = true;
-    if (e.deltaY > 0 || e.deltaX > 0) {
+    const primaryDelta =
+      Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    if (primaryDelta > 0) {
       goNext();
     } else {
       goPrev();

@@ -112,12 +112,9 @@ export default function CircleIconButton({
       aria-label={ariaLabel || icon}
       onClick={onClick}
     >
-      {icon === 'introMorph' ? (
+      {icon === 'infoMorph' ? (
         <span
-          className={[
-            styles.morphBox,
-            isOpen ? styles.morphBoxOpen : '',
-          ]
+          className={[styles.morphBox, isOpen ? styles.morphBoxOpen : '']
             .filter(Boolean)
             .join(' ')}
           aria-hidden="true"
