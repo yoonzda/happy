@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import Title from '../Title/Title';
 import KeywordText from '../KeywordText/KeywordText';
+import { normalizeDetailList } from '../../../utils/detailList';
 import styles from './ProjectDetailPanel.module.css';
 
 export default function ProjectDetailPanel({
   isOpen = false,
+  plainTransition = false,
   project = null,
   prevProject = null,
   nextProject = null,
@@ -32,13 +34,22 @@ export default function ProjectDetailPanel({
 
   const hasMeta = Boolean(project?.period || project?.role);
   const hasDescription = Boolean(project?.description?.trim());
+  const detailItems = normalizeDetailList(project?.detailList);
+  const hasDetailList = detailItems.length > 0;
+  const projectLinks = Array.isArray(project?.links)
+    ? project.links.filter((l) => l && (l.label || l.url))
+    : [];
 
   const formattedPrevNum = String(prevIndex + 1).padStart(2, '0');
   const formattedNextNum = String(nextIndex + 1).padStart(2, '0');
 
   return (
     <aside
-      className={[styles.overlay, isOpen ? styles.overlayOpen : '']
+      className={[
+        styles.overlay,
+        plainTransition ? styles.overlayPlain : '',
+        isOpen ? styles.overlayOpen : '',
+      ]
         .filter(Boolean)
         .join(' ')}
       role="dialog"
@@ -53,43 +64,113 @@ export default function ProjectDetailPanel({
       <div className={styles.body}>
         {project && (
           <div className={styles.bodyInner}>
-            <div className={styles.titleBlock}>
-              <Title variant="section" as="h2" className={styles.panelTitle}>
-                {project.title}
-              </Title>
-              {project.keywords && project.keywords.length > 0 && (
-                <KeywordText keywords={project.keywords} align="left" />
+            <div
+              className={[
+                styles.splitGrid,
+                hasDetailList ? '' : styles.splitGridSingle,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              <div className={styles.leftCol}>
+                <div className={styles.leftTop}>
+                  <header className={styles.titleGroup}>
+                    <Title
+                      variant="section"
+                      as="h2"
+                      className={styles.panelTitle}
+                    >
+                      {project.title}
+                    </Title>
+                    {project.keywords && project.keywords.length > 0 && (
+                      <KeywordText keywords={project.keywords} align="left" />
+                    )}
+                  </header>
+
+                  {hasDescription ? (
+                    <p className={styles.description}>{project.description}</p>
+                  ) : (
+                    <p className={styles.emptyDesc}>
+                      아직 등록된 프로젝트 설명이 없습니다. 관리 페이지(/admin)에서
+                      기간·담당 역할·설명을 입력해 주세요.
+                    </p>
+                  )}
+
+                  {hasMeta && (
+                    <dl className={styles.metaList}>
+                      {project.period && (
+                        <div className={styles.metaRow}>
+                          <dt className={styles.metaLabel}>작업 기간</dt>
+                          <dd className={styles.metaValue}>{project.period}</dd>
+                        </div>
+                      )}
+                      {project.role && (
+                        <div className={styles.metaRow}>
+                          <dt className={styles.metaLabel}>담당 역할</dt>
+                          <dd className={styles.metaValue}>{project.role}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
+                </div>
+
+                {projectLinks.length > 0 && (
+                  <div className={styles.actionBar}>
+                    {projectLinks.map((lnk, idx) => {
+                      const href = lnk.url || '#';
+                      const isExternal =
+                        href.startsWith('http://') ||
+                        href.startsWith('https://');
+                      const label = lnk.label || '바로가기';
+                      return (
+                        <a
+                          key={`${label}-${idx}`}
+                          href={href}
+                          target={isExternal ? '_blank' : undefined}
+                          rel={isExternal ? 'noopener noreferrer' : undefined}
+                          className={styles.actionBtn}
+                        >
+                          <span className={styles.rollMask}>
+                            <span className={styles.rollFaceA}>{label}</span>
+                            <span
+                              className={styles.rollFaceB}
+                              aria-hidden="true"
+                            >
+                              {label}
+                            </span>
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {hasDetailList && (
+                <section
+                  className={styles.rightCol}
+                  aria-label="프로젝트 세부 내용"
+                >
+                  <div className={styles.cardStack}>
+                    {detailItems.map((item, idx) => (
+                      <article key={idx} className={styles.pointCard}>
+                        <div className={styles.pointHeader}>
+                          <span className={styles.pointNum}>
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
+                          {item.title && (
+                            <h3 className={styles.pointTitle}>{item.title}</h3>
+                          )}
+                        </div>
+                        {item.description && (
+                          <p className={styles.pointDesc}>{item.description}</p>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                </section>
               )}
             </div>
-
-            {hasMeta && (
-              <dl className={styles.metaList}>
-                {project.period && (
-                  <div className={styles.metaRow}>
-                    <dt className={styles.metaLabel}>작업 기간</dt>
-                    <dd className={styles.metaValue}>{project.period}</dd>
-                  </div>
-                )}
-                {project.role && (
-                  <div className={styles.metaRow}>
-                    <dt className={styles.metaLabel}>담당 역할</dt>
-                    <dd className={styles.metaValue}>{project.role}</dd>
-                  </div>
-                )}
-              </dl>
-            )}
-
-            <section className={styles.descSection}>
-              <span className={styles.shortDivider} aria-hidden="true" />
-              {hasDescription ? (
-                <p className={styles.description}>{project.description}</p>
-              ) : (
-                <p className={styles.emptyDesc}>
-                  아직 등록된 프로젝트 설명이 없습니다. 관리 페이지(/admin)에서
-                  기간·담당 역할·설명을 입력해 주세요.
-                </p>
-              )}
-            </section>
           </div>
         )}
       </div>

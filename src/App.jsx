@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import initialProjects from './data/projects.json';
 import initialProfile from './data/profile.json';
+import initialFilters from './data/filters.json';
+import { filterProjects } from './utils/filterProjects';
 import CircleIconButton from './components/ui/CircleIconButton/CircleIconButton';
 import ProjectDetailPanel from './components/ui/ProjectDetailPanel/ProjectDetailPanel';
 import SlideView from './components/views/SlideView/SlideView';
@@ -8,8 +10,9 @@ import BentoGridView from './components/views/BentoGridView/BentoGridView';
 import AdminView from './components/views/AdminView/AdminView';
 import styles from './App.module.css';
 
-const STORAGE_KEY = 'happy_portfolio_projects_v3';
+const STORAGE_KEY = 'happy_portfolio_projects_v4';
 const PROFILE_STORAGE_KEY = 'happy_portfolio_profile_v8';
+const FILTERS_STORAGE_KEY = 'happy_portfolio_filters_v2';
 
 function loadSavedProjects() {
   try {
@@ -18,7 +21,18 @@ function loadSavedProjects() {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed.map(
-          ({ id, title, keywords, links, period, role, description }) => ({
+          ({
+            id,
+            title,
+            keywords,
+            links,
+            period,
+            role,
+            description,
+            detailListTitle,
+            detailList,
+            filters,
+          }) => ({
             id,
             title,
             keywords: Array.isArray(keywords) ? keywords : [],
@@ -26,8 +40,37 @@ function loadSavedProjects() {
             period: period || '',
             role: role || '',
             description: description || '',
+            detailListTitle: detailListTitle || '',
+            detailList: Array.isArray(detailList) ? detailList : [],
+            filters:
+              filters && typeof filters === 'object' && !Array.isArray(filters)
+                ? filters
+                : {},
           })
         );
+      }
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return null;
+}
+
+function loadSavedFilters() {
+  try {
+    const saved = localStorage.getItem(FILTERS_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter((g) => g && typeof g === 'object' && g.id)
+          .map((g) => ({
+            id: String(g.id),
+            label: String(g.label || ''),
+            options: Array.isArray(g.options)
+              ? g.options.map((o) => String(o)).filter(Boolean)
+              : [],
+          }));
       }
     }
   } catch {
@@ -66,6 +109,10 @@ export default function App() {
   const [profile, setProfile] = useState(
     () => loadSavedProfile() || initialProfile
   );
+  const [filterGroups, setFilterGroups] = useState(
+    () => loadSavedFilters() || initialFilters
+  );
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const [viewMode, setViewMode] = useState('slide'); // 'slide' | 'grid'
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -101,7 +148,7 @@ export default function App() {
     };
   }, [isDetailOpen, isAdmin]);
 
-  const handleSaveProjects = async (updatedList) => {
+  const handleSaveProjects = async (updatedList, { skipBuild = false } = {}) => {
     setProjects(updatedList);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
@@ -110,7 +157,10 @@ export default function App() {
     }
 
     try {
-      const res = await fetch('/__local_api/projects', {
+      const url = skipBuild
+        ? '/__local_api/projects?skipBuild=1'
+        : '/__local_api/projects';
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedList),
@@ -127,7 +177,53 @@ export default function App() {
     return { savedToFile: false };
   };
 
-  const handleSaveProfile = async (updatedProfile) => {
+  const handleSaveFilters = async (
+    updatedFilters,
+    { skipBuild = false } = {}
+  ) => {
+    setFilterGroups(updatedFilters);
+    setSelectedFilters((prev) => {
+      const next = {};
+      updatedFilters.forEach((group) => {
+        const prevVals = Array.isArray(prev[group.id]) ? prev[group.id] : [];
+        const valid = prevVals.filter((val) => group.options.includes(val));
+        if (valid.length > 0) {
+          next[group.id] = valid;
+        }
+      });
+      return next;
+    });
+    try {
+      localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(updatedFilters));
+    } catch {
+      // ignore storage errors
+    }
+
+    try {
+      const url = skipBuild
+        ? '/__local_api/filters?skipBuild=1'
+        : '/__local_api/filters';
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFilters),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok) {
+          return { savedToFile: true };
+        }
+      }
+    } catch {
+      // Fallback when not running Vite dev server
+    }
+    return { savedToFile: false };
+  };
+
+  const handleSaveProfile = async (
+    updatedProfile,
+    { skipBuild = false } = {}
+  ) => {
     setProfile(updatedProfile);
     try {
       localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(updatedProfile));
@@ -136,7 +232,10 @@ export default function App() {
     }
 
     try {
-      const res = await fetch('/__local_api/profile', {
+      const url = skipBuild
+        ? '/__local_api/profile?skipBuild=1'
+        : '/__local_api/profile';
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedProfile),
@@ -163,13 +262,20 @@ export default function App() {
     setIsAdmin(false);
   };
 
+  const filteredGridProjects = useMemo(
+    () => filterProjects(projects, selectedFilters),
+    [projects, selectedFilters]
+  );
+
   if (isAdmin) {
     return (
       <AdminView
         projects={projects}
         profile={profile}
+        filterGroups={filterGroups}
         onSaveProjects={handleSaveProjects}
         onSaveProfile={handleSaveProfile}
+        onSaveFilters={handleSaveFilters}
         onClose={handleCloseAdmin}
       />
     );
@@ -181,9 +287,12 @@ export default function App() {
         projects.length
       : 0;
 
+  const detailProjects = viewMode === 'grid' ? filteredGridProjects : projects;
+
   const safeDetailIndex =
-    projects.length > 0
-      ? ((detailIndex % projects.length) + projects.length) % projects.length
+    detailProjects.length > 0
+      ? ((detailIndex % detailProjects.length) + detailProjects.length) %
+        detailProjects.length
       : 0;
 
   const handleToggleTopLeftDetail = () => {
@@ -201,8 +310,9 @@ export default function App() {
   };
 
   const handleDetailPrev = () => {
-    if (projects.length === 0) return;
-    const prevIdx = (safeDetailIndex - 1 + projects.length) % projects.length;
+    if (detailProjects.length === 0) return;
+    const prevIdx =
+      (safeDetailIndex - 1 + detailProjects.length) % detailProjects.length;
     setDetailIndex(prevIdx);
     if (viewMode === 'slide') {
       setCurrentSlideIndex(prevIdx);
@@ -210,8 +320,8 @@ export default function App() {
   };
 
   const handleDetailNext = () => {
-    if (projects.length === 0) return;
-    const nextIdx = (safeDetailIndex + 1) % projects.length;
+    if (detailProjects.length === 0) return;
+    const nextIdx = (safeDetailIndex + 1) % detailProjects.length;
     setDetailIndex(nextIdx);
     if (viewMode === 'slide') {
       setCurrentSlideIndex(nextIdx);
@@ -223,19 +333,21 @@ export default function App() {
     setViewMode((prev) => (prev === 'slide' ? 'grid' : 'slide'));
   };
 
-  const activeDetailProject = projects[safeDetailIndex] || null;
+  const activeDetailProject = detailProjects[safeDetailIndex] || null;
   const prevDetailIndex =
-    projects.length > 1
-      ? (safeDetailIndex - 1 + projects.length) % projects.length
+    detailProjects.length > 1
+      ? (safeDetailIndex - 1 + detailProjects.length) % detailProjects.length
       : 0;
   const nextDetailIndex =
-    projects.length > 1 ? (safeDetailIndex + 1) % projects.length : 0;
+    detailProjects.length > 1
+      ? (safeDetailIndex + 1) % detailProjects.length
+      : 0;
   const prevDetailProject =
-    projects.length > 1 ? projects[prevDetailIndex] : null;
+    detailProjects.length > 1 ? detailProjects[prevDetailIndex] : null;
   const nextDetailProject =
-    projects.length > 1 ? projects[nextDetailIndex] : null;
+    detailProjects.length > 1 ? detailProjects[nextDetailIndex] : null;
   const showTopLeftButton =
-    projects.length > 0 && (viewMode === 'slide' || isDetailOpen);
+    isDetailOpen || (viewMode === 'slide' && projects.length > 0);
 
   return (
     <>
@@ -274,18 +386,23 @@ export default function App() {
       ) : (
         <BentoGridView
           projects={projects}
+          filteredProjects={filteredGridProjects}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilters}
+          onChangeFilters={setSelectedFilters}
           onOpenDetail={handleOpenListDetail}
         />
       )}
 
       <ProjectDetailPanel
         isOpen={isDetailOpen}
+        plainTransition={viewMode === 'grid'}
         project={activeDetailProject}
         prevProject={prevDetailProject}
         nextProject={nextDetailProject}
         prevIndex={prevDetailIndex}
         nextIndex={nextDetailIndex}
-        totalCount={projects.length}
+        totalCount={detailProjects.length}
         onPrev={handleDetailPrev}
         onNext={handleDetailNext}
         onClose={() => setIsDetailOpen(false)}

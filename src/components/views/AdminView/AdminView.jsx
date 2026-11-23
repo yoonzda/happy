@@ -1,16 +1,19 @@
 import React, { useState, useRef } from 'react';
 import Title from '../../ui/Title/Title';
 import TextLinkButton from '../../ui/TextLinkButton/TextLinkButton';
+import { normalizeDetailItem } from '../../../utils/detailList';
 import styles from './AdminView.module.css';
 
 export default function AdminView({
   projects = [],
   profile = {},
+  filterGroups = [],
   onSaveProjects,
   onSaveProfile,
+  onSaveFilters,
   onClose,
 }) {
-  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'profile'
+  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'filters' | 'profile'
 
   // Projects state
   const [items, setItems] = useState(() =>
@@ -19,6 +22,13 @@ export default function AdminView({
       period: p.period || '',
       role: p.role || '',
       description: p.description || '',
+      detailList: Array.isArray(p.detailList)
+        ? p.detailList.map(normalizeDetailItem)
+        : [],
+      filters:
+        p.filters && typeof p.filters === 'object' && !Array.isArray(p.filters)
+          ? p.filters
+          : {},
       keywords: Array.isArray(p.keywords) ? p.keywords : [],
       links:
         Array.isArray(p.links) && p.links.length > 0
@@ -30,6 +40,21 @@ export default function AdminView({
   const [draggingIndex, setDraggingIndex] = useState(null);
   const [keywordInput, setKeywordInput] = useState('');
   const dragFromRef = useRef(null);
+
+  // Filter categories state
+  const [filterList, setFilterList] = useState(() =>
+    Array.isArray(filterGroups)
+      ? filterGroups.map((g, idx) => ({
+          id: g.id || `cat-${idx + 1}`,
+          label: g.label || '',
+          options: Array.isArray(g.options) ? [...g.options] : [],
+        }))
+      : []
+  );
+  const [selectedFilterIdx, setSelectedFilterIdx] = useState(0);
+  const [draggingFilterIdx, setDraggingFilterIdx] = useState(null);
+  const [filterOptionInput, setFilterOptionInput] = useState('');
+  const filterDragFromRef = useRef(null);
 
   // Profile state
   const [profileData, setProfileData] = useState(() => ({
@@ -47,6 +72,7 @@ export default function AdminView({
   const [statusMsg, setStatusMsg] = useState('');
 
   const current = items[selectedIndex] || null;
+  const currentFilterGroup = filterList[selectedFilterIdx] || null;
   const currentSection =
     profileSelectedIdx >= 0
       ? profileData.sections[profileSelectedIdx] || null
@@ -56,6 +82,14 @@ export default function AdminView({
     setItems((prev) =>
       prev.map((item, idx) =>
         idx === selectedIndex ? { ...item, ...patch } : item
+      )
+    );
+  };
+
+  const updateCurrentFilterGroup = (patch) => {
+    setFilterList((prev) =>
+      prev.map((group, idx) =>
+        idx === selectedFilterIdx ? { ...group, ...patch } : group
       )
     );
   };
@@ -83,6 +117,8 @@ export default function AdminView({
       period: '',
       role: '',
       description: '',
+      detailList: [],
+      filters: {},
       keywords: ['웹 디자인', '2026'],
       links: [
         { label: '웹사이트', url: 'https://github.com/yoonzda/happy' },
@@ -198,6 +234,157 @@ export default function AdminView({
     updateCurrent({ links: updatedLinks });
   };
 
+  const handleDetailItemChange = (itemIndex, field, value) => {
+    if (!current) return;
+    const updatedList = (current.detailList || []).map((entry, idx) => {
+      if (idx !== itemIndex) return entry;
+      const base =
+        entry && typeof entry === 'object' && !Array.isArray(entry)
+          ? entry
+          : normalizeDetailItem(entry);
+      return { ...base, [field]: value };
+    });
+    updateCurrent({ detailList: updatedList });
+  };
+
+  const handleAddDetailItem = () => {
+    if (!current) return;
+    updateCurrent({
+      detailList: [...(current.detailList || []), { title: '', description: '' }],
+    });
+  };
+
+  const handleRemoveDetailItem = (itemIndex) => {
+    if (!current) return;
+    const updatedList = (current.detailList || []).filter(
+      (_, idx) => idx !== itemIndex
+    );
+    updateCurrent({ detailList: updatedList });
+  };
+
+  const handleToggleProjectFilter = (groupId, option) => {
+    if (!current) return;
+    const currentMap =
+      current.filters && typeof current.filters === 'object'
+        ? current.filters
+        : {};
+    const prevVals = Array.isArray(currentMap[groupId])
+      ? currentMap[groupId]
+      : [];
+    const exists = prevVals.includes(option);
+    const nextVals = exists
+      ? prevVals.filter((v) => v !== option)
+      : [...prevVals, option];
+    const nextMap = { ...currentMap };
+    if (nextVals.length > 0) {
+      nextMap[groupId] = nextVals;
+    } else {
+      delete nextMap[groupId];
+    }
+    updateCurrent({ filters: nextMap });
+  };
+
+  // Filter category handlers
+  const handleSelectFilterGroup = (idx) => {
+    setSelectedFilterIdx(idx);
+    setFilterOptionInput('');
+  };
+
+  const handleAddFilterGroup = () => {
+    const nextNum = filterList.length + 1;
+    const newGroup = {
+      id: `cat-${Date.now()}`,
+      label: `새 카테고리 ${nextNum}`,
+      options: [],
+    };
+    const nextList = [...filterList, newGroup];
+    setFilterList(nextList);
+    setSelectedFilterIdx(nextList.length - 1);
+    setFilterOptionInput('');
+    setStatusMsg('');
+  };
+
+  const handleDeleteFilterGroup = () => {
+    if (!currentFilterGroup) return;
+    const nextList = filterList.filter((_, idx) => idx !== selectedFilterIdx);
+    setFilterList(nextList);
+    setSelectedFilterIdx(Math.max(0, selectedFilterIdx - 1));
+    setFilterOptionInput('');
+    setStatusMsg('');
+  };
+
+  const handleAddFilterOption = () => {
+    if (!currentFilterGroup) return;
+    const raw = filterOptionInput.trim();
+    if (!raw) return;
+
+    const newOpts = raw
+      .split(',')
+      .map((o) => o.trim())
+      .filter(Boolean);
+
+    if (newOpts.length > 0) {
+      const merged = [...(currentFilterGroup.options || [])];
+      newOpts.forEach((opt) => {
+        if (!merged.includes(opt)) {
+          merged.push(opt);
+        }
+      });
+      updateCurrentFilterGroup({ options: merged });
+    }
+    setFilterOptionInput('');
+  };
+
+  const handleFilterOptionKeyDown = (e) => {
+    if (e.nativeEvent.isComposing) return;
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFilterOption();
+    }
+  };
+
+  const handleRemoveFilterOption = (optIdx) => {
+    if (!currentFilterGroup) return;
+    const nextOpts = (currentFilterGroup.options || []).filter(
+      (_, idx) => idx !== optIdx
+    );
+    updateCurrentFilterGroup({ options: nextOpts });
+  };
+
+  const handleFilterDragStart = (index, e) => {
+    filterDragFromRef.current = index;
+    setDraggingFilterIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleFilterDragEnter = (targetIndex) => {
+    const fromIndex = filterDragFromRef.current;
+    if (fromIndex === null || fromIndex === targetIndex) return;
+
+    setFilterList((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(targetIndex, 0, moved);
+      return next;
+    });
+
+    if (selectedFilterIdx === fromIndex) {
+      setSelectedFilterIdx(targetIndex);
+    } else if (fromIndex < selectedFilterIdx && targetIndex >= selectedFilterIdx) {
+      setSelectedFilterIdx((s) => s - 1);
+    } else if (fromIndex > selectedFilterIdx && targetIndex <= selectedFilterIdx) {
+      setSelectedFilterIdx((s) => s + 1);
+    }
+
+    filterDragFromRef.current = targetIndex;
+    setDraggingFilterIdx(targetIndex);
+  };
+
+  const handleFilterDragEnd = () => {
+    filterDragFromRef.current = null;
+    setDraggingFilterIdx(null);
+  };
+
   // Profile handlers
   const handleAddProfileKeyword = () => {
     const raw = profileKeywordInput.trim();
@@ -298,16 +485,41 @@ export default function AdminView({
   };
 
   const handleSaveAll = async () => {
+    const normalizedFilters = filterList.map((group, idx) => ({
+      id: group.id || `cat-${idx + 1}`,
+      label: (group.label || '').trim() || `카테고리 ${idx + 1}`,
+      options: Array.isArray(group.options)
+        ? group.options.map((o) => String(o).trim()).filter(Boolean)
+        : [],
+    }));
+
     const normalizedProjects = items.map((item) => {
       const cleanLinks = (item.links || []).filter(
         (l) => l.label.trim() || l.url.trim()
       );
+      const cleanDetailList = (item.detailList || [])
+        .map(normalizeDetailItem)
+        .filter((entry) => entry.title || entry.description);
+      const cleanFilters = {};
+      const rawFilters =
+        item.filters && typeof item.filters === 'object' ? item.filters : {};
+      normalizedFilters.forEach((group) => {
+        const assigned = Array.isArray(rawFilters[group.id])
+          ? rawFilters[group.id].filter((val) => group.options.includes(val))
+          : [];
+        if (assigned.length > 0) {
+          cleanFilters[group.id] = assigned;
+        }
+      });
+
       return {
         id: item.id,
         title: item.title.trim() || '제목 없음',
         period: (item.period || '').trim(),
         role: (item.role || '').trim(),
         description: (item.description || '').trim(),
+        detailList: cleanDetailList,
+        filters: cleanFilters,
         keywords: Array.isArray(item.keywords) ? item.keywords : [],
         links: cleanLinks,
       };
@@ -330,12 +542,23 @@ export default function AdminView({
       })),
     };
 
-    const resProj = await onSaveProjects(normalizedProjects);
+    const resProj = await onSaveProjects(normalizedProjects, {
+      skipBuild: Boolean(onSaveFilters || onSaveProfile),
+    });
+    const resFilters = onSaveFilters
+      ? await onSaveFilters(normalizedFilters, {
+          skipBuild: Boolean(onSaveProfile),
+        })
+      : { savedToFile: true };
     const resProf = onSaveProfile
-      ? await onSaveProfile(normalizedProfile)
+      ? await onSaveProfile(normalizedProfile, { skipBuild: false })
       : { savedToFile: true };
 
-    if (resProj?.savedToFile && resProf?.savedToFile) {
+    if (
+      resProj?.savedToFile &&
+      resFilters?.savedToFile &&
+      resProf?.savedToFile
+    ) {
       setStatusMsg('저장 완료');
     } else {
       setStatusMsg('저장됨');
@@ -363,6 +586,18 @@ export default function AdminView({
                 onClick={() => setActiveTab('projects')}
               >
                 프로젝트 ({items.length})
+              </button>
+              <button
+                type="button"
+                className={[
+                  styles.tabButton,
+                  activeTab === 'filters' ? styles.tabButtonActive : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                onClick={() => setActiveTab('filters')}
+              >
+                필터 관리 ({filterList.length})
               </button>
               <button
                 type="button"
@@ -451,7 +686,12 @@ export default function AdminView({
               {current && (
                 <>
                   <div className={styles.fieldGroup}>
-                    <label className={styles.label}>프로젝트 제목</label>
+                    <label className={styles.label}>
+                      프로젝트 제목
+                      <span className={styles.requiredMark} aria-hidden="true">
+                        *
+                      </span>
+                    </label>
                     <input
                       type="text"
                       className={styles.input}
@@ -464,7 +704,7 @@ export default function AdminView({
 
                   <div className={styles.metaFieldRow}>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.label}>작업 기간 (선택)</label>
+                      <label className={styles.label}>작업 기간</label>
                       <input
                         type="text"
                         className={styles.input}
@@ -476,7 +716,7 @@ export default function AdminView({
                       />
                     </div>
                     <div className={styles.fieldGroup}>
-                      <label className={styles.label}>담당 역할 (선택)</label>
+                      <label className={styles.label}>담당 역할</label>
                       <input
                         type="text"
                         className={styles.input}
@@ -503,7 +743,144 @@ export default function AdminView({
                   </div>
 
                   <div className={styles.fieldGroup}>
-                    <label className={styles.label}>관련 키워드</label>
+                    <div className={styles.sidebarHeader}>
+                      <label className={styles.label}>상세 카드 목록</label>
+                      <TextLinkButton onClick={handleAddDetailItem}>
+                        + 카드 추가
+                      </TextLinkButton>
+                    </div>
+
+                    {(current.detailList || []).length > 0 && (
+                      <div className={styles.linksList}>
+                        {(current.detailList || []).map((rawItem, dIdx) => {
+                          const entry =
+                            rawItem && typeof rawItem === 'object'
+                              ? rawItem
+                              : normalizeDetailItem(rawItem);
+                          return (
+                            <div key={dIdx} className={styles.detailCardEditor}>
+                              <div className={styles.detailItemRow}>
+                                <span className={styles.detailItemIndex}>
+                                  {String(dIdx + 1).padStart(2, '0')}
+                                </span>
+                                <input
+                                  type="text"
+                                  className={styles.input}
+                                  placeholder="소제목 (예: 개인화, 편리한 사용)"
+                                  value={entry.title || ''}
+                                  onChange={(e) =>
+                                    handleDetailItemChange(
+                                      dIdx,
+                                      'title',
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <button
+                                  type="button"
+                                  className={styles.removeBtn}
+                                  onClick={() => handleRemoveDetailItem(dIdx)}
+                                >
+                                  삭제
+                                </button>
+                              </div>
+                              <textarea
+                                rows={2}
+                                className={styles.textarea}
+                                placeholder="카드 설명을 입력해 주세요."
+                                value={entry.description || ''}
+                                onChange={(e) =>
+                                  handleDetailItemChange(
+                                    dIdx,
+                                    'description',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.sidebarHeader}>
+                      <label className={styles.label}>목록 필터</label>
+                      <TextLinkButton onClick={() => setActiveTab('filters')}>
+                        카테고리 편집
+                      </TextLinkButton>
+                    </div>
+                    {filterList.length > 0 ? (
+                      <div className={styles.filterAssignBox}>
+                        {filterList.map((group) => {
+                          const selectedVals = Array.isArray(
+                            current.filters?.[group.id]
+                          )
+                            ? current.filters[group.id]
+                            : [];
+                          return (
+                            <div
+                              key={group.id}
+                              className={styles.filterAssignRow}
+                            >
+                              <span className={styles.filterAssignLabel}>
+                                {group.label || '이름 없음'}
+                              </span>
+                              <div className={styles.filterPillList}>
+                                {group.options.length > 0 ? (
+                                  group.options.map((option) => {
+                                    const active =
+                                      selectedVals.includes(option);
+                                    return (
+                                      <button
+                                        key={option}
+                                        type="button"
+                                        className={[
+                                          styles.filterAssignPill,
+                                          active
+                                            ? styles.filterAssignPillActive
+                                            : '',
+                                        ]
+                                          .filter(Boolean)
+                                          .join(' ')}
+                                        onClick={() =>
+                                          handleToggleProjectFilter(
+                                            group.id,
+                                            option
+                                          )
+                                        }
+                                        aria-pressed={active}
+                                      >
+                                        {option}
+                                      </button>
+                                    );
+                                  })
+                                ) : (
+                                  <span className={styles.filterEmptyHint}>
+                                    항목 없음
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className={styles.filterEmptyHint}>
+                        등록된 필터 카테고리가 없습니다. 상단 ‘필터 관리’ 탭에서
+                        추가해 주세요.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label}>
+                      관련 키워드
+                      <span className={styles.requiredMark} aria-hidden="true">
+                        *
+                      </span>
+                    </label>
                     <input
                       type="text"
                       className={styles.input}
@@ -535,7 +912,15 @@ export default function AdminView({
 
                   <div className={styles.fieldGroup}>
                     <div className={styles.sidebarHeader}>
-                      <label className={styles.label}>연결 링크 목록</label>
+                      <label className={styles.label}>
+                        연결 링크 목록
+                        <span
+                          className={styles.requiredMark}
+                          aria-hidden="true"
+                        >
+                          *
+                        </span>
+                      </label>
                       <TextLinkButton onClick={handleAddLink}>
                         + 링크 추가
                       </TextLinkButton>
@@ -589,6 +974,136 @@ export default function AdminView({
                     </button>
                   </div>
                 </>
+              )}
+            </section>
+          </div>
+        ) : activeTab === 'filters' ? (
+          <div className={styles.layout}>
+            <aside className={styles.sidebar}>
+              <div className={styles.sidebarHeader}>
+                <span className={styles.sidebarTitle}>
+                  카테고리 줄 ({filterList.length})
+                </span>
+                <TextLinkButton onClick={handleAddFilterGroup}>
+                  + 카테고리 추가
+                </TextLinkButton>
+              </div>
+
+              <div className={styles.projectList}>
+                {filterList.map((group, idx) => {
+                  const isActive = idx === selectedFilterIdx;
+                  const isDragging = idx === draggingFilterIdx;
+                  return (
+                    <div
+                      key={group.id || idx}
+                      draggable
+                      onDragStart={(e) => handleFilterDragStart(idx, e)}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDragEnter={() => handleFilterDragEnter(idx)}
+                      onDragEnd={handleFilterDragEnd}
+                      className={[
+                        styles.projectItem,
+                        isActive ? styles.projectItemActive : '',
+                        isDragging ? styles.projectItemDragging : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      onClick={() => handleSelectFilterGroup(idx)}
+                    >
+                      <div className={styles.projectItemInfo}>
+                        <span className={styles.projectItemIndex}>
+                          {String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <span className={styles.projectItemTitle}>
+                          {group.label || '이름 없음'}
+                        </span>
+                      </div>
+                      <span className={styles.projectItemIndex}>
+                        {group.options.length}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </aside>
+
+            <section className={styles.editor}>
+              {currentFilterGroup ? (
+                <>
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label}>
+                      카테고리 이름
+                      <span className={styles.requiredMark} aria-hidden="true">
+                        *
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      className={styles.input}
+                      placeholder="예: 구분, 유형, 담당 역할"
+                      value={currentFilterGroup.label}
+                      onChange={(e) =>
+                        updateCurrentFilterGroup({ label: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <label className={styles.label}>
+                      필터 항목 (알약 목록)
+                    </label>
+                    <input
+                      type="text"
+                      className={styles.input}
+                      placeholder="항목 입력 후 Enter (쉼표로 여러 개 추가 가능)"
+                      value={filterOptionInput}
+                      onChange={(e) => setFilterOptionInput(e.target.value)}
+                      onKeyDown={handleFilterOptionKeyDown}
+                    />
+                    {currentFilterGroup.options &&
+                      currentFilterGroup.options.length > 0 && (
+                        <div className={styles.keywordChipList}>
+                          {currentFilterGroup.options.map((opt, oIdx) => (
+                            <span
+                              key={`${opt}-${oIdx}`}
+                              className={styles.keywordChip}
+                            >
+                              <span>{opt}</span>
+                              <button
+                                type="button"
+                                className={styles.keywordChipRemove}
+                                onClick={() => handleRemoveFilterOption(oIdx)}
+                                aria-label={`${opt} 삭제`}
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                  </div>
+
+                  <div className={styles.editorFooter}>
+                    <button
+                      type="button"
+                      className={styles.deleteButton}
+                      onClick={handleDeleteFilterGroup}
+                    >
+                      이 카테고리 삭제
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={handleSaveAll}
+                    >
+                      변경사항 저장하기
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className={styles.filterEmptyHint}>
+                  왼쪽에서 ‘+ 카테고리 추가’를 눌러 필터 줄을 만들어 주세요.
+                </p>
               )}
             </section>
           </div>
@@ -659,6 +1174,9 @@ export default function AdminView({
                   <div className={styles.fieldGroup}>
                     <label className={styles.label}>
                       상단 타이핑 헤드라인 (Title)
+                      <span className={styles.requiredMark} aria-hidden="true">
+                        *
+                      </span>
                     </label>
                     <input
                       type="text"

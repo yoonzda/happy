@@ -4,7 +4,20 @@
     "title": "윤지서점",
     "period": "",
     "role": "",
-    "description": "키보드로 글을 쓰다 보면 종종 종이와 펜이 그리워지곤 합니다. 편리함을 유지한 채 감성을 더하고 싶었습니다. 개인화, 쓴 글의 보기 방식 변경 등의 추가 업데이트를 고민하고 있습니다.",
+    "description": "키보드로 글을 쓰다 보면 종종 종이와 펜이 그리워지곤 합니다. \n편리함을 유지한 채 감성을 더하고 싶었습니다.",
+    "detailListTitle": "추가 개발",
+    "detailList": [
+      "개인화 - 간단한 로그인 프로세스를 추가하고 비밀번호로 개인화",
+      "외부 파일로 저장 - 사이트 외에 방법으로 나의 기록을 백업"
+    ],
+    "filters": {
+      "scope": [
+        "개인"
+      ],
+      "type": [
+        "웹 앱 · 툴"
+      ]
+    },
     "keywords": [
       "블로그",
       "원고지 UI",
@@ -22,7 +35,20 @@
     "title": "ONEDESK",
     "period": "",
     "role": "",
-    "description": "",
+    "description": "사내 인트라넷을 이용하면서 사내 프로그램이라는 이유로 불편함에 적응한 채 이용되는 것이 아쉬웠습니다.\n더불어 인트라넷은 업무의 효율을 올리는 초석이라고 생각해 새롭게 기획하여 AI 로 제작해보았습니다.",
+    "detailListTitle": "작업 포인트",
+    "detailList": [
+      "편리한 사용 - 처음 접한 사람도 쉽게 적응하고 이해할 수 있는 UI",
+      "자동 업무 관리 - 인트라넷에 등록된 업무가 연쇄적으로 등록되고 처리"
+    ],
+    "filters": {
+      "scope": [
+        "개인"
+      ],
+      "type": [
+        "업무 · 어드민"
+      ]
+    },
     "keywords": [
       "웹에이전시",
       "인트라넷",
@@ -41,6 +67,17 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내",
+        "개인"
+      ],
+      "type": [
+        "예약 · 플랫폼"
+      ]
+    },
     "keywords": [
       "쿠폰 시스템 기획",
       "맞춤 UIUX",
@@ -65,6 +102,17 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "개인",
+        "사내"
+      ],
+      "type": [
+        "웹 앱 · 툴"
+      ]
+    },
     "keywords": [
       "커스텀 웹사이트"
     ],
@@ -85,6 +133,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "외주"
+      ],
+      "type": [
+        "기업 · 기관"
+      ]
+    },
     "keywords": [
       "국제중재기관",
       "다국어 웹 퍼블리싱",
@@ -107,6 +165,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "외주"
+      ],
+      "type": [
+        "업무 · 어드민"
+      ]
+    },
     "keywords": [
       "금융권 업무 시스템",
       "UI 표준화 퍼블리싱"
@@ -124,6 +192,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "기업 · 기관"
+      ]
+    },
     "keywords": [
       "심리상담·복지기관",
       "커스텀 게시판",
@@ -142,6 +220,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "기업 · 기관"
+      ]
+    },
     "keywords": [
       "교회 사이트",
       "그누보드",
@@ -160,6 +248,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "예약 · 플랫폼"
+      ]
+    },
     "keywords": [
       "디자인 소재 아카이브",
       "다중 필터 검색 UI"
@@ -177,6 +275,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "개인"
+      ],
+      "type": [
+        "브랜드 · 리디자인"
+      ]
+    },
     "keywords": [
       "여행·관광 가이드 웹",
       "인터랙티브 레이아웃",
@@ -198,6 +306,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "개인"
+      ],
+      "type": [
+        "브랜드 · 리디자인"
+      ]
+    },
     "keywords": [
       "디저트 브랜드 웹",
       "웹 디자인·퍼블리싱",
@@ -217,6 +335,17 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "예약 · 플랫폼",
+        "업무 · 어드민"
+      ]
+    },
     "keywords": [
       "프로그램 신청",
       "관리자 페이지",
@@ -236,6 +365,17 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "예약 · 플랫폼",
+        "업무 · 어드민"
+      ]
+    },
     "keywords": [
       "프로그램 신청",
       "신청 관리",
@@ -258,6 +398,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "예약 · 플랫폼"
+      ]
+    },
     "keywords": [
       "프로그램 신청",
       "회원/비회원 신청",
@@ -283,6 +433,17 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "사내"
+      ],
+      "type": [
+        "업무 · 어드민",
+        "웹 앱 · 툴"
+      ]
+    },
     "keywords": [
       "사내 프로젝트",
       "기획/디자인/퍼블리싱",
@@ -309,6 +470,16 @@
     "period": "",
     "role": "",
     "description": "",
+    "detailListTitle": "",
+    "detailList": [],
+    "filters": {
+      "scope": [
+        "외주"
+      ],
+      "type": [
+        "기업 · 기관"
+      ]
+    },
     "keywords": [
       "아임웹",
       "인터랙티브 원페이지"
