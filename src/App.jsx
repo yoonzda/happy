@@ -32,6 +32,7 @@ function loadSavedProjects() {
             detailListTitle,
             detailList,
             filters,
+            hidden,
           }) => ({
             id,
             title,
@@ -46,6 +47,7 @@ function loadSavedProjects() {
               filters && typeof filters === 'object' && !Array.isArray(filters)
                 ? filters
                 : {},
+            hidden: Boolean(hidden),
           })
         );
       }
@@ -262,9 +264,14 @@ export default function App() {
     setIsAdmin(false);
   };
 
+  const visibleProjects = useMemo(
+    () => projects.filter((p) => !p.hidden),
+    [projects]
+  );
+
   const filteredGridProjects = useMemo(
-    () => filterProjects(projects, selectedFilters),
-    [projects, selectedFilters]
+    () => filterProjects(visibleProjects, selectedFilters),
+    [visibleProjects, selectedFilters]
   );
 
   if (isAdmin) {
@@ -282,12 +289,14 @@ export default function App() {
   }
 
   const safeSlideIndex =
-    projects.length > 0
-      ? ((currentSlideIndex % projects.length) + projects.length) %
-        projects.length
+    visibleProjects.length > 0
+      ? ((currentSlideIndex % visibleProjects.length) +
+          visibleProjects.length) %
+        visibleProjects.length
       : 0;
 
-  const detailProjects = viewMode === 'grid' ? filteredGridProjects : projects;
+  const detailProjects =
+    viewMode === 'grid' ? filteredGridProjects : visibleProjects;
 
   const safeDetailIndex =
     detailProjects.length > 0
@@ -298,7 +307,7 @@ export default function App() {
   const handleToggleTopLeftDetail = () => {
     if (isDetailOpen) {
       setIsDetailOpen(false);
-    } else if (projects.length > 0) {
+    } else if (visibleProjects.length > 0) {
       setDetailIndex(safeSlideIndex);
       setIsDetailOpen(true);
     }
@@ -347,7 +356,7 @@ export default function App() {
   const nextDetailProject =
     detailProjects.length > 1 ? detailProjects[nextDetailIndex] : null;
   const showTopLeftButton =
-    isDetailOpen || (viewMode === 'slide' && projects.length > 0);
+    isDetailOpen || (viewMode === 'slide' && visibleProjects.length > 0);
 
   return (
     <>
@@ -377,7 +386,7 @@ export default function App() {
 
       {viewMode === 'slide' ? (
         <SlideView
-          projects={projects}
+          projects={visibleProjects}
           currentIndex={currentSlideIndex}
           onChangeIndex={setCurrentSlideIndex}
           paused={isDetailOpen}
@@ -385,7 +394,7 @@ export default function App() {
         />
       ) : (
         <BentoGridView
-          projects={projects}
+          projects={visibleProjects}
           filteredProjects={filteredGridProjects}
           filterGroups={filterGroups}
           selectedFilters={selectedFilters}

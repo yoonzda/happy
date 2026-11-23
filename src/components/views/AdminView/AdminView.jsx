@@ -1,8 +1,29 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import Title from '../../ui/Title/Title';
 import TextLinkButton from '../../ui/TextLinkButton/TextLinkButton';
 import { normalizeDetailItem } from '../../../utils/detailList';
 import styles from './AdminView.module.css';
+
+function AutoResizeTextarea({ value = '', rows = 2, className = '', ...props }) {
+  const ref = useRef(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      rows={rows}
+      value={value}
+      className={className}
+      {...props}
+    />
+  );
+}
 
 export default function AdminView({
   projects = [],
@@ -29,11 +50,9 @@ export default function AdminView({
         p.filters && typeof p.filters === 'object' && !Array.isArray(p.filters)
           ? p.filters
           : {},
+      hidden: Boolean(p.hidden),
       keywords: Array.isArray(p.keywords) ? p.keywords : [],
-      links:
-        Array.isArray(p.links) && p.links.length > 0
-          ? p.links
-          : [{ label: '사이트 보러가기', url: 'https://' }],
+      links: Array.isArray(p.links) ? p.links : [],
     }))
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -119,10 +138,9 @@ export default function AdminView({
       description: '',
       detailList: [],
       filters: {},
+      hidden: false,
       keywords: ['웹 디자인', '2026'],
-      links: [
-        { label: '웹사이트', url: 'https://github.com/yoonzda/happy' },
-      ],
+      links: [],
     };
     const nextList = [...items, newProj];
     setItems(nextList);
@@ -137,6 +155,16 @@ export default function AdminView({
     setItems(nextList);
     setSelectedIndex(Math.max(0, selectedIndex - 1));
     setKeywordInput('');
+    setStatusMsg('');
+  };
+
+  const handleToggleProjectHidden = (targetIndex, e) => {
+    e.stopPropagation();
+    setItems((prev) =>
+      prev.map((item, idx) =>
+        idx === targetIndex ? { ...item, hidden: !item.hidden } : item
+      )
+    );
     setStatusMsg('');
   };
 
@@ -224,7 +252,7 @@ export default function AdminView({
   const handleAddLink = () => {
     if (!current) return;
     updateCurrent({
-      links: [...(current.links || []), { label: 'GitHub', url: 'https://' }],
+      links: [...(current.links || []), { label: '', url: '' }],
     });
   };
 
@@ -494,9 +522,12 @@ export default function AdminView({
     }));
 
     const normalizedProjects = items.map((item) => {
-      const cleanLinks = (item.links || []).filter(
-        (l) => l.label.trim() || l.url.trim()
-      );
+      const cleanLinks = (item.links || [])
+        .map((l) => ({
+          label: (l.label || '').trim(),
+          url: (l.url || '').trim(),
+        }))
+        .filter((l) => l.label || l.url);
       const cleanDetailList = (item.detailList || [])
         .map(normalizeDetailItem)
         .filter((entry) => entry.title || entry.description);
@@ -520,6 +551,7 @@ export default function AdminView({
         description: (item.description || '').trim(),
         detailList: cleanDetailList,
         filters: cleanFilters,
+        hidden: Boolean(item.hidden),
         keywords: Array.isArray(item.keywords) ? item.keywords : [],
         links: cleanLinks,
       };
@@ -651,6 +683,7 @@ export default function AdminView({
                 {items.map((item, idx) => {
                   const isActive = idx === selectedIndex;
                   const isDragging = idx === draggingIndex;
+                  const isHidden = Boolean(item.hidden);
                   return (
                     <div
                       key={item.id || idx}
@@ -663,6 +696,7 @@ export default function AdminView({
                         styles.projectItem,
                         isActive ? styles.projectItemActive : '',
                         isDragging ? styles.projectItemDragging : '',
+                        isHidden ? styles.projectItemHidden : '',
                       ]
                         .filter(Boolean)
                         .join(' ')}
@@ -676,6 +710,57 @@ export default function AdminView({
                           {item.title}
                         </span>
                       </div>
+
+                      <button
+                        type="button"
+                        draggable={false}
+                        className={[
+                          styles.visibilityToggleBtn,
+                          isHidden ? styles.visibilityToggleBtnHidden : '',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onClick={(e) => handleToggleProjectHidden(idx, e)}
+                        aria-label={
+                          isHidden
+                            ? `${item.title} 공개로 전환`
+                            : `${item.title} 숨기기`
+                        }
+                        aria-pressed={isHidden}
+                      >
+                        {isHidden ? (
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.75"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={styles.visibilityIcon}
+                            aria-hidden="true"
+                          >
+                            <path d="M10.6 5.6A11.3 11.3 0 0 1 12 5.5c6.5 0 10 6.5 10 6.5a18.2 18.2 0 0 1-3.1 4.1" />
+                            <path d="M6.2 6.8A18.3 18.3 0 0 0 2 12s3.5 6.5 10 6.5c1.5 0 2.9-.3 4.2-.9" />
+                            <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+                            <line x1="3" y1="3" x2="21" y2="21" />
+                          </svg>
+                        ) : (
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.75"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={styles.visibilityIcon}
+                            aria-hidden="true"
+                          >
+                            <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
                   );
                 })}
@@ -708,7 +793,6 @@ export default function AdminView({
                       <input
                         type="text"
                         className={styles.input}
-                        placeholder="예: 2025.03 — 2025.05"
                         value={current.period || ''}
                         onChange={(e) =>
                           updateCurrent({ period: e.target.value })
@@ -720,7 +804,6 @@ export default function AdminView({
                       <input
                         type="text"
                         className={styles.input}
-                        placeholder="예: 기획 · UI 디자인 · 퍼블리싱"
                         value={current.role || ''}
                         onChange={(e) =>
                           updateCurrent({ role: e.target.value })
@@ -731,10 +814,9 @@ export default function AdminView({
 
                   <div className={styles.fieldGroup}>
                     <label className={styles.label}>프로젝트 설명</label>
-                    <textarea
-                      rows={4}
+                    <AutoResizeTextarea
+                      rows={3}
                       className={styles.textarea}
-                      placeholder="프로젝트 개요, 주요 기능, 작업 포인트 등을 자유롭게 적어 주세요."
                       value={current.description || ''}
                       onChange={(e) =>
                         updateCurrent({ description: e.target.value })
@@ -766,7 +848,6 @@ export default function AdminView({
                                 <input
                                   type="text"
                                   className={styles.input}
-                                  placeholder="소제목 (예: 개인화, 편리한 사용)"
                                   value={entry.title || ''}
                                   onChange={(e) =>
                                     handleDetailItemChange(
@@ -784,10 +865,9 @@ export default function AdminView({
                                   삭제
                                 </button>
                               </div>
-                              <textarea
+                              <AutoResizeTextarea
                                 rows={2}
                                 className={styles.textarea}
-                                placeholder="카드 설명을 입력해 주세요."
                                 value={entry.description || ''}
                                 onChange={(e) =>
                                   handleDetailItemChange(
@@ -912,49 +992,43 @@ export default function AdminView({
 
                   <div className={styles.fieldGroup}>
                     <div className={styles.sidebarHeader}>
-                      <label className={styles.label}>
-                        연결 링크 목록
-                        <span
-                          className={styles.requiredMark}
-                          aria-hidden="true"
-                        >
-                          *
-                        </span>
-                      </label>
+                      <label className={styles.label}>연결 링크 목록</label>
                       <TextLinkButton onClick={handleAddLink}>
                         + 링크 추가
                       </TextLinkButton>
                     </div>
 
-                    <div className={styles.linksList}>
-                      {(current.links || []).map((lnk, lIdx) => (
-                        <div key={lIdx} className={styles.linkRow}>
-                          <input
-                            type="text"
-                            className={styles.input}
-                            value={lnk.label}
-                            onChange={(e) =>
-                              handleLinkChange(lIdx, 'label', e.target.value)
-                            }
-                          />
-                          <input
-                            type="url"
-                            className={styles.input}
-                            value={lnk.url}
-                            onChange={(e) =>
-                              handleLinkChange(lIdx, 'url', e.target.value)
-                            }
-                          />
-                          <button
-                            type="button"
-                            className={styles.removeBtn}
-                            onClick={() => handleRemoveLink(lIdx)}
-                          >
-                            삭제
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                    {(current.links || []).length > 0 && (
+                      <div className={styles.linksList}>
+                        {(current.links || []).map((lnk, lIdx) => (
+                          <div key={lIdx} className={styles.linkRow}>
+                            <input
+                              type="text"
+                              className={styles.input}
+                              value={lnk.label}
+                              onChange={(e) =>
+                                handleLinkChange(lIdx, 'label', e.target.value)
+                              }
+                            />
+                            <input
+                              type="url"
+                              className={styles.input}
+                              value={lnk.url}
+                              onChange={(e) =>
+                                handleLinkChange(lIdx, 'url', e.target.value)
+                              }
+                            />
+                            <button
+                              type="button"
+                              className={styles.removeBtn}
+                              onClick={() => handleRemoveLink(lIdx)}
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className={styles.editorFooter}>
@@ -1040,7 +1114,6 @@ export default function AdminView({
                     <input
                       type="text"
                       className={styles.input}
-                      placeholder="예: 구분, 유형, 담당 역할"
                       value={currentFilterGroup.label}
                       onChange={(e) =>
                         updateCurrentFilterGroup({ label: e.target.value })
@@ -1055,7 +1128,6 @@ export default function AdminView({
                     <input
                       type="text"
                       className={styles.input}
-                      placeholder="항목 입력 후 Enter (쉼표로 여러 개 추가 가능)"
                       value={filterOptionInput}
                       onChange={(e) => setFilterOptionInput(e.target.value)}
                       onKeyDown={handleFilterOptionKeyDown}
@@ -1195,7 +1267,7 @@ export default function AdminView({
                     <label className={styles.label}>
                       자기소개 본문 (==단어==로 감싸면 노란 형광펜 표시)
                     </label>
-                    <textarea
+                    <AutoResizeTextarea
                       rows={3}
                       className={styles.textarea}
                       value={profileData.bio}
@@ -1214,7 +1286,6 @@ export default function AdminView({
                       <input
                         type="text"
                         className={styles.input}
-                        placeholder="전화번호"
                         value={profileData.phone}
                         onChange={(e) =>
                           setProfileData((prev) => ({
@@ -1226,7 +1297,6 @@ export default function AdminView({
                       <input
                         type="email"
                         className={styles.input}
-                        placeholder="이메일"
                         value={profileData.email}
                         onChange={(e) =>
                           setProfileData((prev) => ({
@@ -1344,7 +1414,7 @@ export default function AdminView({
 
                     <div className={styles.fieldGroup}>
                       <label className={styles.label}>항목 설명</label>
-                      <textarea
+                      <AutoResizeTextarea
                         rows={3}
                         className={styles.textarea}
                         value={currentSection.description}
