@@ -28,3 +28,21 @@ export function normalizeDetailList(list) {
     .map(normalizeDetailItem)
     .filter((item) => item.title || item.description);
 }
+
+export function normalizeProjectImages(list) {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((raw) => {
+      if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+        return {
+          src: String(raw.src || '').trim(),
+          caption: String(raw.caption || '').trim(),
+        };
+      }
+      return {
+        src: String(raw || '').trim(),
+        caption: '',
+      };
+    })
+    .filter((item) => Boolean(item.src));
+}

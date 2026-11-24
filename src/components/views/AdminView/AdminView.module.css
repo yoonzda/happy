@@ -404,6 +404,49 @@
   background-color: #ececf0;
 }
 
+.hiddenFileInput {
+  display: none;
+}
+
+.imageEditorRow {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+  padding: 10px;
+  background-color: #ececf0;
+  cursor: grab;
+  user-select: none;
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+}
+
+.imageEditorRow:active {
+  cursor: grabbing;
+}
+
+.imageEditorRowDragging {
+  opacity: 0.4;
+}
+
+.imageThumbBox {
+  width: 96px;
+  height: 62px;
+  background-color: #ffffff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.imageThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
 .detailItemRow {
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr) auto;
@@ -515,8 +558,14 @@
 @media (max-width: 720px) {
   .metaFieldRow,
   .linkRow,
-  .filterAssignRow {
+  .filterAssignRow,
+  .imageEditorRow {
     grid-template-columns: 1fr;
+  }
+
+  .imageThumbBox {
+    width: 100%;
+    height: 140px;
   }
 
   .removeBtn {

@@ -15,6 +15,12 @@
         "description": "간단한 로그인과 본인인증을 이용해 실제 나만의 공간이 구분 될 수 있도록 하고,\n다운로드 기능을 추가해 자신의 기록을 보관할 수 있는 방법을 늘리려고 합니다."
       }
     ],
+    "images": [
+      {
+        "src": "./images/screencapture-yoonzda-record-vercel-app--1795501204164.png",
+        "caption": "이미지 설명?"
+      }
+    ],
     "filters": {
       "scope": [
         "개인"
@@ -52,6 +58,7 @@
         "description": "업무가 연쇄적으로 등록되고 처리되며 작업 정보와 히스토리를 따로 관리하지 않아도 쉽게 확인 할 수 있습니다."
       }
     ],
+    "images": [],
     "filters": {
       "scope": [
         "개인"
@@ -89,6 +96,7 @@
         "description": "관광객과 가맹점 모두에게 도움이 될 수 있는 프로젝트라 생각했으며\n이를 위해 관광객은 조금 더 쉽게 정보를 얻고 쿠폰을 사용할 수 있게\n가맹점들은 쿠폰의 적용과 정산에 번거로움이 적을 수 있도록 수정하였습니다."
       }
     ],
+    "images": [],
     "filters": {
       "scope": [
         "사내",
@@ -124,6 +132,7 @@
     "role": "",
     "description": "",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "개인",
@@ -155,6 +164,7 @@
     "role": "",
     "description": "기획, 디자인, 퍼블리싱, 개발의 역할이 명확히 나눠져 진행된 프로젝트로 각각의 작업자들과 소통하며 진행한 외주 작업입니다.",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "외주"
@@ -173,10 +183,6 @@
       {
         "label": "운영 사이트",
         "url": "https://www.kcabinternational.or.kr/"
-      },
-      {
-        "label": "라이브 데모",
-        "url": "https://yoonzda.github.io/kcab/"
       }
     ]
   },
@@ -187,6 +193,7 @@
     "role": "",
     "description": "",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "외주"
@@ -208,12 +215,45 @@
     ]
   },
   {
+    "id": "proj-09",
+    "title": "파워인포텍",
+    "period": "",
+    "role": "",
+    "description": "",
+    "detailList": [],
+    "images": [],
+    "filters": {
+      "scope": [
+        "외주"
+      ],
+      "type": [
+        "기업 · 기관"
+      ]
+    },
+    "hidden": false,
+    "keywords": [
+      "아임웹",
+      "인터랙티브 원페이지"
+    ],
+    "links": [
+      {
+        "label": "라이브 데모",
+        "url": "https://yoonzda.github.io/powerinfotech"
+      },
+      {
+        "label": "운영 사이트",
+        "url": "https://itkorea.net/"
+      }
+    ]
+  },
+  {
     "id": "proj-06",
     "title": "마음드림센터",
     "period": "",
     "role": "",
     "description": "",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "사내"
@@ -242,6 +282,7 @@
     "role": "",
     "description": "",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "사내"
@@ -270,6 +311,7 @@
     "role": "",
     "description": "",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "사내"
@@ -306,6 +348,7 @@
         "description": "기획과 디자인을 직접 진행하였으며, 잡지의 느낌을 베이스로 하였고 웹사이트의 애니메이션을 살려 심플하지만 심심하지 않은 사이트를 목표로 작업했습니다."
       }
     ],
+    "images": [],
     "filters": {
       "scope": [
         "개인"
@@ -337,6 +380,7 @@
     "role": "",
     "description": "퍼블리싱을 공부하고 가장 처음 작업했던 사이트입니다. 코드에 대한 이해와 더불어 홈페이지가 돌아가는 프로세스를 이해하고 적응할 수 있었습니다.",
     "detailList": [],
+    "images": [],
     "filters": {
       "scope": [
         "개인"
@@ -373,6 +417,16 @@
       {
         "title": "프로그램 차별점",
         "description": "백령도 점박이물범 협의체의 프로그램 구성 특성상 최소 인원이 만족되어야 프로그램이 진행되어야 하는 상황이였으며,\n관리자 페이지에서 이를 쉽게 확인 할 수 있게 하였습니다. 또한 인원이 미달 되는 경우에도 신청자들에게 자동으로 문자가 발송되어 관리의 편리함을 더했습니다."
+      }
+    ],
+    "images": [
+      {
+        "src": "./images/screencapture-pichunter-aware-isbn-victo-1795501272940.png",
+        "caption": "이미지 설명"
+      },
+      {
+        "src": "./images/screencapture-pichunter-aware-isbn-victo-1795501559808.png",
+        "caption": "층별 안내 관리자"
       }
     ],
     "filters": {
@@ -414,6 +468,7 @@
         "description": "홈페이지 방문 및 프로그램 신청에 대한 통계 내용을 확인 할 수 있도록 하였으며 데이터 다운로드 기능을 추가하여 엑셀 파일로 관리 할 수 있도록 하였습니다."
       }
     ],
+    "images": [],
     "filters": {
       "scope": [
         "사내"
@@ -456,6 +511,7 @@
         "description": "족구장의 경우 5개의 코트로 이루어져 있어 코트별 예약 기능을 새롭게 추가하였습니다.\n기존 운영에서 관리자와 사용자의 불편한 점을 개선하는 기준을 세워 프로세스에 적용되도록 작업됐습니다."
       }
     ],
+    "images": [],
     "filters": {
       "scope": [
         "사내"
@@ -500,6 +556,7 @@
         "description": "보험의 경우 관련 내용을 찾고 원하는 정보를 확인하는데 있어 방대한 양을 가지고 있기 때문에\n학습된 AI 를 통해 보다 빠르고 편하게 상담사의 상담을 돕는 프로그램 입니다."
       }
     ],
+    "images": [],
     "filters": {
       "scope": [
         "사내"
@@ -516,36 +573,5 @@
       "보험 대리점"
     ],
     "links": []
-  },
-  {
-    "id": "proj-09",
-    "title": "파워인포텍",
-    "period": "",
-    "role": "",
-    "description": "",
-    "detailList": [],
-    "filters": {
-      "scope": [
-        "외주"
-      ],
-      "type": [
-        "기업 · 기관"
-      ]
-    },
-    "hidden": false,
-    "keywords": [
-      "아임웹",
-      "인터랙티브 원페이지"
-    ],
-    "links": [
-      {
-        "label": "라이브 데모",
-        "url": "https://yoonzda.github.io/powerinfotech"
-      },
-      {
-        "label": "운영 사이트",
-        "url": "https://itkorea.net/"
-      }
-    ]
   }
 ]

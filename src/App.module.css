@@ -2,7 +2,7 @@
   position: fixed;
   top: var(--edge-padding-desktop);
   left: var(--edge-padding-desktop);
-  z-index: 50;
+  z-index: 30;
 }
 
 .topRightToggle {
@@ -12,14 +12,114 @@
   z-index: 30;
 }
 
+.topActionBtn {
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid #dcdcde;
+  border-radius: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.015em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease-smooth),
+    color 0.3s var(--ease-smooth);
+}
+
+.topActionBtn:hover {
+  border-color: var(--color-text-primary);
+}
+
+.topActionBtn:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
+}
+
+.topActionRoll {
+  position: relative;
+  display: inline-block;
+  height: 1.35em;
+  line-height: 1.35em;
+  overflow: hidden;
+}
+
+.topActionFaceA,
+.topActionFaceB {
+  display: block;
+  transition: transform 0.4s var(--ease-smooth), opacity 0.28s ease;
+}
+
+.topActionFaceA {
+  transform: translateY(0%);
+}
+
+.topActionFaceB {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  font-weight: var(--weight-semibold);
+  transform: translateY(105%);
+}
+
+.topActionBtn:hover .topActionFaceA,
+.topActionBtn:focus-visible .topActionFaceA {
+  transform: translateY(-105%);
+  opacity: 0.25;
+}
+
+.topActionBtn:hover .topActionFaceB,
+.topActionBtn:focus-visible .topActionFaceB {
+  transform: translateY(0%);
+}
+
+.slideStageOuter {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.slideStage {
+  width: 100%;
+  transition: transform 0.54s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.42s ease;
+  will-change: transform, opacity;
+}
+
+.slideStageShifted {
+  transform: translate3d(56px, 0, 0);
+  opacity: 0.35;
+}
+
 @media (max-width: 768px) {
   .topLeftToggle {
     top: var(--edge-padding-mobile);
     left: var(--edge-padding-mobile);
   }
 
+  .topLeftWithFilter {
+    left: calc(var(--edge-padding-mobile) + 50px);
+  }
+
   .topRightToggle {
     top: var(--edge-padding-mobile);
     right: var(--edge-padding-mobile);
+  }
+}
+
+@media (max-width: 600px) {
+  .topLeftWithFilter {
+    left: calc(var(--edge-padding-mobile) + 46px);
+  }
+
+  .topActionBtn {
+    height: 38px;
+    padding: 0 14px;
+    font-size: 0.86rem;
   }
 }

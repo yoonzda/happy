@@ -3,7 +3,6 @@ import initialProjects from './data/projects.json';
 import initialProfile from './data/profile.json';
 import initialFilters from './data/filters.json';
 import { filterProjects } from './utils/filterProjects';
-import CircleIconButton from './components/ui/CircleIconButton/CircleIconButton';
 import ProjectDetailPanel from './components/ui/ProjectDetailPanel/ProjectDetailPanel';
 import SlideView from './components/views/SlideView/SlideView';
 import BentoGridView from './components/views/BentoGridView/BentoGridView';
@@ -31,6 +30,7 @@ function loadSavedProjects() {
             description,
             detailListTitle,
             detailList,
+            images,
             filters,
             hidden,
           }) => ({
@@ -43,6 +43,7 @@ function loadSavedProjects() {
             description: description || '',
             detailListTitle: detailListTitle || '',
             detailList: Array.isArray(detailList) ? detailList : [],
+            images: Array.isArray(images) ? images : [],
             filters:
               filters && typeof filters === 'object' && !Array.isArray(filters)
                 ? filters
@@ -307,8 +308,8 @@ export default function App() {
   const handleToggleTopLeftDetail = () => {
     if (isDetailOpen) {
       setIsDetailOpen(false);
-    } else if (visibleProjects.length > 0) {
-      setDetailIndex(safeSlideIndex);
+    } else if (detailProjects.length > 0) {
+      setDetailIndex(viewMode === 'grid' ? 0 : safeSlideIndex);
       setIsDetailOpen(true);
     }
   };
@@ -337,6 +338,17 @@ export default function App() {
     }
   };
 
+  const handleSelectDetailIndex = (targetIdx) => {
+    if (detailProjects.length === 0) return;
+    const clamped =
+      ((targetIdx % detailProjects.length) + detailProjects.length) %
+      detailProjects.length;
+    setDetailIndex(clamped);
+    if (viewMode === 'slide') {
+      setCurrentSlideIndex(clamped);
+    }
+  };
+
   const handleToggleViewMode = () => {
     setIsDetailOpen(false);
     setViewMode((prev) => (prev === 'slide' ? 'grid' : 'slide'));
@@ -355,43 +367,73 @@ export default function App() {
     detailProjects.length > 1 ? detailProjects[prevDetailIndex] : null;
   const nextDetailProject =
     detailProjects.length > 1 ? detailProjects[nextDetailIndex] : null;
-  const showTopLeftButton =
-    isDetailOpen || (viewMode === 'slide' && visibleProjects.length > 0);
+  const hasFilterGroups = filterGroups.some(
+    (g) => Array.isArray(g.options) && g.options.length > 0
+  );
+  const showTopLeftButton = detailProjects.length > 0;
+  const shiftTopLeftForMobileFilter = viewMode === 'grid' && hasFilterGroups;
+  const viewSwitchLabel = viewMode === 'slide' ? '목록보기' : '슬라이드';
 
   return (
     <>
       {showTopLeftButton && (
-        <div className={styles.topLeftToggle}>
-          <CircleIconButton
-            icon="infoMorph"
-            isOpen={isDetailOpen}
-            variant={isDetailOpen ? 'darkSolid' : 'circle'}
-            ariaLabel={
-              isDetailOpen ? '프로젝트 설명 닫기' : '프로젝트 설명 보기'
-            }
+        <div
+          className={[
+            styles.topLeftToggle,
+            shiftTopLeftForMobileFilter ? styles.topLeftWithFilter : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          <button
+            type="button"
+            className={styles.topActionBtn}
             onClick={handleToggleTopLeftDetail}
-          />
+          >
+            <span className={styles.topActionRoll}>
+              <span className={styles.topActionFaceA}>설명보기</span>
+              <span className={styles.topActionFaceB} aria-hidden="true">
+                설명보기
+              </span>
+            </span>
+          </button>
         </div>
       )}
 
       <div className={styles.topRightToggle}>
-        <CircleIconButton
-          icon={viewMode === 'slide' ? 'grid' : 'slide'}
-          ariaLabel={
-            viewMode === 'slide' ? '목록 보기로 전환' : '슬라이드 보기로 전환'
-          }
+        <button
+          type="button"
+          className={styles.topActionBtn}
           onClick={handleToggleViewMode}
-        />
+        >
+          <span className={styles.topActionRoll}>
+            <span className={styles.topActionFaceA}>{viewSwitchLabel}</span>
+            <span className={styles.topActionFaceB} aria-hidden="true">
+              {viewSwitchLabel}
+            </span>
+          </span>
+        </button>
       </div>
 
       {viewMode === 'slide' ? (
-        <SlideView
-          projects={visibleProjects}
-          currentIndex={currentSlideIndex}
-          onChangeIndex={setCurrentSlideIndex}
-          paused={isDetailOpen}
-          typedSlidesRef={typedSlidesRef}
-        />
+        <div className={styles.slideStageOuter}>
+          <div
+            className={[
+              styles.slideStage,
+              isDetailOpen ? styles.slideStageShifted : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          >
+            <SlideView
+              projects={visibleProjects}
+              currentIndex={currentSlideIndex}
+              onChangeIndex={setCurrentSlideIndex}
+              paused={isDetailOpen}
+              typedSlidesRef={typedSlidesRef}
+            />
+          </div>
+        </div>
       ) : (
         <BentoGridView
           projects={visibleProjects}
@@ -407,11 +449,14 @@ export default function App() {
         isOpen={isDetailOpen}
         plainTransition={viewMode === 'grid'}
         project={activeDetailProject}
+        projects={detailProjects}
+        currentIndex={safeDetailIndex}
         prevProject={prevDetailProject}
         nextProject={nextDetailProject}
         prevIndex={prevDetailIndex}
         nextIndex={nextDetailIndex}
         totalCount={detailProjects.length}
+        onSelectIndex={handleSelectDetailIndex}
         onPrev={handleDetailPrev}
         onNext={handleDetailNext}
         onClose={() => setIsDetailOpen(false)}

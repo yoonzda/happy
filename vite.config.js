@@ -31,6 +31,70 @@ function localProjectsAdminPlugin() {
           return;
         }
 
+        if (reqPath === '/__local_api/projects' && req.method === 'GET') {
+          try {
+            const targetPath = path.resolve(process.cwd(), 'src/data/projects.json');
+            const raw = fs.readFileSync(targetPath, 'utf-8');
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Cache-Control', 'no-store');
+            res.end(raw);
+          } catch (err) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ ok: false, error: err.message }));
+          }
+          return;
+        }
+
+        if (reqPath === '/__local_api/upload-image' && req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk) => {
+            body += chunk.toString();
+          });
+          req.on('end', () => {
+            try {
+              const parsed = JSON.parse(body);
+              const dataUrl = String(parsed?.dataUrl || '');
+              const match = dataUrl.match(/^data:image\/([a-zA-Z0-9.+-]+);base64,(.+)$/);
+              if (!match) {
+                throw new Error('유효한 이미지 데이터가 아닙니다.');
+              }
+              const rawSubtype = match[1].toLowerCase();
+              const extMap = {
+                jpeg: 'jpg',
+                jpg: 'jpg',
+                png: 'png',
+                webp: 'webp',
+                gif: 'gif',
+                'svg+xml': 'svg',
+              };
+              const ext = extMap[rawSubtype] || 'png';
+              const baseOriginal = path.basename(
+                String(parsed?.filename || 'capture'),
+                path.extname(String(parsed?.filename || ''))
+              );
+              const safeStem =
+                baseOriginal
+                  .replace(/[^a-zA-Z0-9_-]+/g, '-')
+                  .replace(/^-+|-+$/g, '')
+                  .slice(0, 40) || 'capture';
+              const finalName = `${safeStem}-${Date.now()}.${ext}`;
+              const imagesDir = path.resolve(process.cwd(), 'images');
+              fs.mkdirSync(imagesDir, { recursive: true });
+              const buffer = Buffer.from(match[2], 'base64');
+              fs.writeFileSync(path.join(imagesDir, finalName), buffer);
+
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ ok: true, src: `./images/${finalName}` }));
+            } catch (err) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ ok: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
         if (reqPath === '/__local_api/projects' && req.method === 'POST') {
           let body = '';
           req.on('data', (chunk) => {

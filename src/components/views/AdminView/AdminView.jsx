@@ -25,6 +25,33 @@ function AutoResizeTextarea({ value = '', rows = 2, className = '', ...props }) 
   );
 }
 
+function normalizeImageItem(raw) {
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    return {
+      src: String(raw.src || '').trim(),
+      caption: String(raw.caption || ''),
+    };
+  }
+  return { src: String(raw || '').trim(), caption: '' };
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('파일을 읽지 못했습니다.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function resolvePreviewSrc(src) {
+  if (!src) return '';
+  if (src.startsWith('./') && window.location.pathname.endsWith('/admin/')) {
+    return `.${src}`;
+  }
+  return src;
+}
+
 export default function AdminView({
   projects = [],
   profile = {},
@@ -46,6 +73,9 @@ export default function AdminView({
       detailList: Array.isArray(p.detailList)
         ? p.detailList.map(normalizeDetailItem)
         : [],
+      images: Array.isArray(p.images)
+        ? p.images.map(normalizeImageItem).filter((img) => img.src)
+        : [],
       filters:
         p.filters && typeof p.filters === 'object' && !Array.isArray(p.filters)
           ? p.filters
@@ -57,8 +87,12 @@ export default function AdminView({
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [draggingIndex, setDraggingIndex] = useState(null);
+  const [draggingImageIdx, setDraggingImageIdx] = useState(null);
   const [keywordInput, setKeywordInput] = useState('');
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const dragFromRef = useRef(null);
+  const imageDragFromRef = useRef(null);
+  const imageInputRef = useRef(null);
 
   // Filter categories state
   const [filterList, setFilterList] = useState(() =>
@@ -137,6 +171,7 @@ export default function AdminView({
       role: '',
       description: '',
       detailList: [],
+      images: [],
       filters: {},
       hidden: false,
       keywords: ['웹 디자인', '2026'],
@@ -288,6 +323,102 @@ export default function AdminView({
       (_, idx) => idx !== itemIndex
     );
     updateCurrent({ detailList: updatedList });
+  };
+
+  const handleSelectImageFiles = async (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    if (!current || files.length === 0) return;
+
+    const targetIndex = selectedIndex;
+    setIsUploadingImage(true);
+    setStatusMsg('');
+
+    const uploaded = [];
+    for (const file of files) {
+      try {
+        const dataUrl = await readFileAsDataUrl(file);
+        let finalSrc = dataUrl;
+        try {
+          const res = await fetch('/__local_api/upload-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, dataUrl }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.ok && data.src) {
+              finalSrc = data.src;
+            }
+          }
+        } catch {
+          // Fallback to dataUrl when dev upload API is unavailable
+        }
+        uploaded.push({ src: finalSrc, caption: '' });
+      } catch {
+        // ignore unreadable file
+      }
+    }
+
+    if (uploaded.length > 0) {
+      setItems((prev) =>
+        prev.map((item, idx) =>
+          idx === targetIndex
+            ? { ...item, images: [...(item.images || []), ...uploaded] }
+            : item
+        )
+      );
+    }
+    setIsUploadingImage(false);
+  };
+
+  const handleImageCaptionChange = (imgIdx, value) => {
+    if (!current) return;
+    const updated = (current.images || []).map((raw, idx) => {
+      if (idx !== imgIdx) return raw;
+      const base = normalizeImageItem(raw);
+      return { ...base, caption: value };
+    });
+    updateCurrent({ images: updated });
+  };
+
+  const handleImageDragStart = (imgIdx, e) => {
+    if (e.target && e.target.tagName === 'INPUT') {
+      e.preventDefault();
+      return;
+    }
+    imageDragFromRef.current = imgIdx;
+    setDraggingImageIdx(imgIdx);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleImageDragEnter = (targetIdx) => {
+    const fromIdx = imageDragFromRef.current;
+    if (fromIdx === null || fromIdx === targetIdx || !current) return;
+
+    setItems((prev) =>
+      prev.map((item, idx) => {
+        if (idx !== selectedIndex) return item;
+        const nextImages = [...(item.images || [])];
+        const [moved] = nextImages.splice(fromIdx, 1);
+        nextImages.splice(targetIdx, 0, moved);
+        return { ...item, images: nextImages };
+      })
+    );
+
+    imageDragFromRef.current = targetIdx;
+    setDraggingImageIdx(targetIdx);
+  };
+
+  const handleImageDragEnd = () => {
+    imageDragFromRef.current = null;
+    setDraggingImageIdx(null);
+  };
+
+  const handleRemoveImage = (imgIdx) => {
+    if (!current) return;
+    const updated = (current.images || []).filter((_, idx) => idx !== imgIdx);
+    updateCurrent({ images: updated });
   };
 
   const handleToggleProjectFilter = (groupId, option) => {
@@ -531,6 +662,13 @@ export default function AdminView({
       const cleanDetailList = (item.detailList || [])
         .map(normalizeDetailItem)
         .filter((entry) => entry.title || entry.description);
+      const cleanImages = (item.images || [])
+        .map(normalizeImageItem)
+        .map((img) => ({
+          src: img.src.trim(),
+          caption: img.caption.trim(),
+        }))
+        .filter((img) => img.src);
       const cleanFilters = {};
       const rawFilters =
         item.filters && typeof item.filters === 'object' ? item.filters : {};
@@ -550,6 +688,7 @@ export default function AdminView({
         role: (item.role || '').trim(),
         description: (item.description || '').trim(),
         detailList: cleanDetailList,
+        images: cleanImages,
         filters: cleanFilters,
         hidden: Boolean(item.hidden),
         keywords: Array.isArray(item.keywords) ? item.keywords : [],
@@ -877,6 +1016,83 @@ export default function AdminView({
                                   )
                                 }
                               />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.fieldGroup}>
+                    <div className={styles.sidebarHeader}>
+                      <label className={styles.label}>캡처 이미지</label>
+                      <TextLinkButton
+                        onClick={() =>
+                          !isUploadingImage && imageInputRef.current?.click()
+                        }
+                      >
+                        {isUploadingImage ? '업로드 중...' : '+ 이미지 추가'}
+                      </TextLinkButton>
+                    </div>
+                    <input
+                      ref={imageInputRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className={styles.hiddenFileInput}
+                      onChange={handleSelectImageFiles}
+                    />
+
+                    {(current.images || []).length > 0 && (
+                      <div className={styles.linksList}>
+                        {(current.images || []).map((rawImg, imgIdx) => {
+                          const img = normalizeImageItem(rawImg);
+                          const isDraggingImg = imgIdx === draggingImageIdx;
+                          return (
+                            <div
+                              key={`${img.src}-${imgIdx}`}
+                              draggable
+                              onDragStart={(e) =>
+                                handleImageDragStart(imgIdx, e)
+                              }
+                              onDragOver={(e) => e.preventDefault()}
+                              onDragEnter={() => handleImageDragEnter(imgIdx)}
+                              onDragEnd={handleImageDragEnd}
+                              className={[
+                                styles.imageEditorRow,
+                                isDraggingImg
+                                  ? styles.imageEditorRowDragging
+                                  : '',
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
+                            >
+                              <div className={styles.imageThumbBox}>
+                                <img
+                                  src={resolvePreviewSrc(img.src)}
+                                  alt={img.caption || `캡처 ${imgIdx + 1}`}
+                                  draggable={false}
+                                  className={styles.imageThumb}
+                                />
+                              </div>
+                              <input
+                                type="text"
+                                className={styles.input}
+                                value={img.caption}
+                                onChange={(e) =>
+                                  handleImageCaptionChange(
+                                    imgIdx,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <button
+                                type="button"
+                                className={styles.removeBtn}
+                                onClick={() => handleRemoveImage(imgIdx)}
+                              >
+                                삭제
+                              </button>
                             </div>
                           );
                         })}
